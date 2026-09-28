@@ -1,0 +1,1300 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="description" content="可旋转、可操作的压水堆核电站三维模型：拔插控制棒、调节主泵，观察链式反应、温度反馈与停堆保护。">
+<meta name="theme-color" content="#E6EAE4" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#0D1311" media="(prefers-color-scheme: dark)">
+<meta property="og:type" content="website">
+<meta property="og:title" content="压水堆原理沙盘">
+<meta property="og:description" content="可旋转、可操作的压水堆核电站三维模型：拔插控制棒、调节主泵，观察链式反应、温度反馈与停堆保护。">
+<meta property="og:url" content="https://fuzzylogic112.github.io/pwr-sandbox/">
+<meta property="og:image" content="https://fuzzylogic112.github.io/pwr-sandbox/docs/screenshot.png">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%2316201B'/%3E%3Cg fill='none' stroke='%236A9CFF' stroke-width='3.2'%3E%3Cellipse cx='32' cy='32' rx='23' ry='9'/%3E%3Cellipse cx='32' cy='32' rx='23' ry='9' transform='rotate(60 32 32)'/%3E%3Cellipse cx='32' cy='32' rx='23' ry='9' transform='rotate(120 32 32)'/%3E%3C/g%3E%3Ccircle cx='32' cy='32' r='5' fill='%23EFAE12'/%3E%3C/svg%3E">
+<title>压水堆原理沙盘</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=Noto+Sans+SC:wght@400;500;700&family=Noto+Serif+SC:wght@700;900&display=swap" media="print" onload="this.media='all'">
+<noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=Noto+Sans+SC:wght@400;500;700&family=Noto+Serif+SC:wght@700;900&display=swap"></noscript>
+<style>
+:root{color-scheme:light;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+img{max-width:100%}
+[hidden]{display:none!important}
+:root{
+  --bg:#E6EAE4; --surface:#F6F8F4; --surface-2:#EDF1EA; --ink:#16201B; --ink-2:#3C4943; --muted:#65736C;
+  --line:#CAD2CA; --line-2:#B4BEB5;
+  --accent:#1D5BE0; --accent-soft:rgba(29,91,224,.12); --accent-ink:#FFFFFF;
+  --hot:#C8461C; --cold:#2878C2; --ok:#2A7E4F; --warn:#A96F05; --crit:#C22F2A;
+  --vp-bg:#DCE3DC; --vp-ground:#CFD7CE; --vp-grid:#B7C2B7; --shell:#AFC0B4; --plume:#FFFFFF;
+  --glass:rgba(246,248,244,.92);
+  --water:#DAE8F1; --pin:#8B8272; --pin-core:#DDAE3F; --rod2d:#2F3734; --fast:#DE641C; --thermal:#1D5BE0; --flash:#EFAE12; --absorb:#56615C;
+  --lamp-off:#DFE5DD; --lamp-off-ink:#8E998F; --lamp-frame:#C3CCC2;
+  --lamp-white:#F7F2D8; --lamp-white-ink:#2B2A1E; --lamp-amber:#F2B33A; --lamp-amber-ink:#2B1B00; --lamp-red:#D63A2F; --lamp-red-ink:#FFF7F5;
+  --shadow:0 1px 0 rgba(22,32,27,.04), 0 14px 32px -20px rgba(22,32,27,.45);
+  --r:10px;
+  --f-sans:"Noto Sans SC","PingFang SC","Hiragino Sans GB","Microsoft YaHei",system-ui,sans-serif;
+  --f-serif:"Noto Serif SC","Songti SC","STSong","SimSun",serif;
+  --f-mono:"IBM Plex Mono",ui-monospace,"SFMono-Regular",Menlo,Consolas,monospace;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    color-scheme:dark;
+    --bg:#0D1311; --surface:#141C19; --surface-2:#1A2420; --ink:#E2E9E4; --ink-2:#B6C3BC; --muted:#84948C;
+    --line:#26312C; --line-2:#36433D;
+    --accent:#6A9CFF; --accent-soft:rgba(106,156,255,.15); --accent-ink:#0A1224;
+    --hot:#F07A4A; --cold:#58A6EE; --ok:#52B882; --warn:#E6B347; --crit:#F0655D;
+    --vp-bg:#0F1714; --vp-ground:#121C18; --vp-grid:#213029; --shell:#8FA79A; --plume:#C9D3CE;
+    --glass:rgba(20,28,25,.9);
+    --water:#0E2331; --pin:#6E685C; --pin-core:#E5B94F; --rod2d:#A7B1AC; --fast:#FF8A45; --thermal:#6A9CFF; --flash:#FFD04D; --absorb:#9AA7A0;
+    --lamp-off:#18211E; --lamp-off-ink:#55645D; --lamp-frame:#2A3531;
+    --shadow:0 1px 0 rgba(0,0,0,.25), 0 14px 32px -18px rgba(0,0,0,.7);
+  }
+}
+:root[data-theme="dark"]{
+  color-scheme:dark;
+  --bg:#0D1311; --surface:#141C19; --surface-2:#1A2420; --ink:#E2E9E4; --ink-2:#B6C3BC; --muted:#84948C;
+  --line:#26312C; --line-2:#36433D;
+  --accent:#6A9CFF; --accent-soft:rgba(106,156,255,.15); --accent-ink:#0A1224;
+  --hot:#F07A4A; --cold:#58A6EE; --ok:#52B882; --warn:#E6B347; --crit:#F0655D;
+  --vp-bg:#0F1714; --vp-ground:#121C18; --vp-grid:#213029; --shell:#8FA79A; --plume:#C9D3CE;
+  --glass:rgba(20,28,25,.9);
+  --water:#0E2331; --pin:#6E685C; --pin-core:#E5B94F; --rod2d:#A7B1AC; --fast:#FF8A45; --thermal:#6A9CFF; --flash:#FFD04D; --absorb:#9AA7A0;
+  --lamp-off:#18211E; --lamp-off-ink:#55645D; --lamp-frame:#2A3531;
+  --shadow:0 1px 0 rgba(0,0,0,.25), 0 14px 32px -18px rgba(0,0,0,.7);
+}
+
+html,body{height:100%}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--f-sans);font-size:14px;line-height:1.6;-webkit-font-smoothing:antialiased}
+button{font-family:inherit}
+button:focus-visible,.lbl:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+
+.app{height:100%;box-sizing:border-box;display:flex;flex-direction:column;gap:12px;padding-inline:16px;padding-block:14px 16px;max-width:1720px;margin:0 auto}
+
+/* header */
+.top{display:flex;flex-wrap:wrap;align-items:flex-end;justify-content:space-between;gap:8px 24px}
+.brand h1{font-family:var(--f-serif);font-weight:900;font-size:26px;line-height:1.15;margin:0;letter-spacing:.05em;text-wrap:balance}
+.brand p{margin:5px 0 0;color:var(--ink-2);max-width:64ch;font-size:13.5px}
+.spec{display:flex;flex-wrap:wrap;gap:6px;font:500 12px/1.4 var(--f-mono);color:var(--ink-2)}
+.spec span{border:1px solid var(--line-2);border-radius:4px;padding:2px 7px;background:var(--surface)}
+
+/* stage */
+.stage{flex:1;min-height:0;display:grid;grid-template-columns:minmax(0,1fr) 384px;gap:12px}
+.viewcol{position:relative;min-width:0;min-height:0;border:1px solid var(--line);border-radius:var(--r);overflow:hidden;background:var(--vp-bg)}
+.vp{position:absolute;inset:0;overflow:hidden}
+#scene{display:block;width:100%;height:100%;touch-action:none;cursor:grab;outline:none}
+#scene.grabbing{cursor:grabbing}
+.labels{position:absolute;inset:0;pointer-events:none}
+.lbl{position:absolute;left:0;top:0;pointer-events:auto;visibility:hidden;font:500 12px/1.2 var(--f-sans);color:var(--ink);background:var(--glass);border:1px solid var(--line-2);border-radius:999px;padding:3px 9px 3px 7px;white-space:nowrap;cursor:pointer;transition:border-color .15s,background-color .15s}
+.lbl::before{content:"";display:inline-block;width:6px;height:6px;border-radius:50%;background:var(--accent);margin-right:6px;vertical-align:1px}
+.lbl:hover{border-color:var(--accent)}
+.lbl.on{background:var(--accent);border-color:var(--accent);color:var(--accent-ink)}
+.lbl.on::before{background:var(--accent-ink)}
+
+.vp-top{position:absolute;left:12px;right:12px;top:10px;display:flex;justify-content:space-between;align-items:flex-start;gap:8px;pointer-events:none}
+.hint{margin:0;font-size:12px;color:var(--muted);background:var(--glass);padding:3px 9px;border-radius:6px}
+.tools{display:flex;gap:2px;pointer-events:auto;background:var(--glass);border:1px solid var(--line);border-radius:8px;padding:3px;margin-left:auto}
+.tools button{font-size:12px;font-weight:500;border:0;background:transparent;color:var(--ink-2);padding:4px 10px;border-radius:6px;cursor:pointer}
+.tools button:hover{color:var(--ink)}
+.tools button[aria-pressed="true"]{background:var(--accent-soft);color:var(--accent)}
+
+.tripbar{position:absolute;left:50%;top:52px;transform:translateX(-50%);display:flex;align-items:center;gap:12px;max-width:calc(100% - 24px);box-sizing:border-box;background:var(--lamp-red);color:var(--lamp-red-ink);border-radius:8px;padding:7px 7px 7px 14px;font-weight:500;font-size:13.5px;box-shadow:var(--shadow)}
+.tripbar button{flex:0 0 auto;font-size:12.5px;font-weight:600;color:var(--lamp-red-ink);background:rgba(255,255,255,.14);border:1px solid rgba(255,255,255,.55);border-radius:6px;padding:4px 12px;cursor:pointer}
+.nogl{position:absolute;inset:0;display:grid;place-items:center;padding:24px;text-align:center;color:var(--ink-2)}
+
+.tour{position:absolute;left:12px;right:12px;bottom:12px;display:flex;gap:6px;overflow-x:auto;scrollbar-width:none;padding:2px}
+.tour::-webkit-scrollbar{display:none}
+.tour button{flex:0 0 auto;display:flex;align-items:center;gap:7px;font-size:13px;font-weight:500;color:var(--ink);background:var(--glass);border:1px solid var(--line-2);border-radius:999px;padding:4px 12px 4px 4px;cursor:pointer}
+.tour button:hover{border-color:var(--accent)}
+.tour .num{display:inline-grid;place-items:center;width:22px;height:22px;border-radius:50%;background:var(--surface-2);font:600 12px/1 var(--f-mono);color:var(--ink-2)}
+.tour button.on{background:var(--accent);border-color:var(--accent);color:var(--accent-ink)}
+.tour button.on .num{background:rgba(255,255,255,.24);color:var(--accent-ink)}
+
+.info{position:absolute;left:12px;bottom:58px;width:min(356px,calc(100% - 24px));max-height:calc(100% - 124px);overflow:auto;box-sizing:border-box;background:var(--glass);-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px);border:1px solid var(--line-2);border-radius:var(--r);padding:12px 16px 14px;box-shadow:var(--shadow)}
+.info-h{display:flex;justify-content:space-between;align-items:center;gap:8px}
+.eyebrow{font:500 11.5px/1.4 var(--f-mono);letter-spacing:.06em;color:var(--accent)}
+.x{border:0;background:transparent;font-size:18px;line-height:1;color:var(--muted);cursor:pointer;padding:3px 7px;border-radius:6px}
+.x:hover{color:var(--ink);background:var(--surface-2)}
+.info h3{font-family:var(--f-serif);font-weight:700;font-size:19px;line-height:1.3;margin:2px 0 6px;text-wrap:balance}
+.info p{margin:0 0 7px;color:var(--ink-2);font-size:13.5px;line-height:1.65}
+.figs{font:500 12px/1.5 var(--f-mono);color:var(--ink);background:var(--surface-2);border-radius:6px;padding:6px 9px;margin:6px 0 10px}
+.info-nav{display:flex;justify-content:flex-end;gap:8px}
+.btn{font-size:13px;font-weight:500;border-radius:7px;padding:6px 13px;cursor:pointer;border:1px solid var(--line-2);background:var(--surface);color:var(--ink)}
+.btn:hover{border-color:var(--accent)}
+.btn.primary{background:var(--accent);border-color:var(--accent);color:var(--accent-ink)}
+
+/* panel */
+.panel{min-height:0;overflow-y:auto;display:flex;flex-direction:column;gap:12px;padding-right:2px}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:14px}
+.card-h{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:10px}
+.card-h h2{font-size:14.5px;font-weight:700;margin:0;letter-spacing:.04em}
+.code{font:500 11px/1.4 var(--f-mono);color:var(--muted);letter-spacing:.06em}
+.pill{font-size:12px;font-weight:700;padding:2px 10px;border-radius:999px;border:1px solid currentColor;white-space:nowrap}
+.pill.ok{color:var(--ok)} .pill.warn{color:var(--warn)} .pill.cool{color:var(--cold)} .pill.idle{color:var(--muted)}
+.pill.crit{background:var(--lamp-red);border-color:var(--lamp-red);color:var(--lamp-red-ink)}
+.lab{display:block;font-size:12px;color:var(--muted);line-height:1.4}
+.kline{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.kline b{display:block;font:600 22px/1.25 var(--f-mono);font-variant-numeric:tabular-nums}
+.explain{margin:8px 0 12px;font-size:13px;color:var(--ink-2);line-height:1.6;min-height:4.2em}
+.readouts{display:grid;grid-template-columns:1fr 1fr;gap:1px;background:var(--line);border:1px solid var(--line);border-radius:8px;overflow:hidden}
+.ro{background:var(--surface);padding:9px 11px;display:flex;flex-direction:column;gap:1px;min-width:0}
+.val{display:flex;align-items:baseline;gap:4px}
+.val b{font:600 24px/1.2 var(--f-mono);font-variant-numeric:tabular-nums}
+.val i{font-style:normal;font-size:12px;color:var(--muted)}
+.ro.alarm .val b{color:var(--crit)}
+.sub{font:12px/1.45 var(--f-mono);color:var(--muted);font-variant-numeric:tabular-nums}
+.annun{display:grid;grid-template-columns:repeat(3,1fr);gap:5px;margin-top:12px;padding:6px;background:var(--lamp-frame);border-radius:8px}
+.lamp{display:grid;place-items:center;text-align:center;min-height:36px;padding:4px;border-radius:3px;background:var(--lamp-off);color:var(--lamp-off-ink);font-size:12px;font-weight:700;line-height:1.25;box-shadow:inset 0 0 0 1px rgba(0,0,0,.07);transition:background-color .2s,color .2s}
+.lamp.on[data-c="white"]{background:var(--lamp-white);color:var(--lamp-white-ink);box-shadow:0 0 14px rgba(247,242,216,.45)}
+.lamp.on[data-c="amber"]{background:var(--lamp-amber);color:var(--lamp-amber-ink);box-shadow:0 0 14px rgba(242,179,58,.45)}
+.lamp.on[data-c="red"]{background:var(--lamp-red);color:var(--lamp-red-ink);box-shadow:0 0 14px rgba(214,58,47,.45)}
+.lamp.on.flash{animation:blink 1s steps(2,start) infinite}
+@keyframes blink{50%{opacity:.4}}
+
+.ctl{display:flex;flex-direction:column;gap:4px;margin-bottom:14px}
+.ctl-h{display:flex;justify-content:space-between;align-items:baseline;gap:8px;flex-wrap:wrap}
+.ctl-h label{font-weight:500}
+.ctl-h output{font:500 12px/1.4 var(--f-mono);color:var(--ink-2);font-variant-numeric:tabular-nums}
+.ends{display:flex;justify-content:space-between;font-size:11.5px;color:var(--muted)}
+input[type=range]{-webkit-appearance:none;appearance:none;width:100%;height:26px;background:transparent;margin:0;cursor:pointer}
+input[type=range]:disabled{cursor:not-allowed;opacity:.55}
+input[type=range]::-webkit-slider-runnable-track{height:6px;border-radius:3px;background:linear-gradient(to right,var(--accent) var(--p,0%),var(--line-2) var(--p,0%))}
+input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:20px;height:20px;border-radius:50%;background:var(--surface);border:2px solid var(--accent);margin-top:-7px;box-shadow:0 1px 3px rgba(0,0,0,.25)}
+input[type=range]::-moz-range-track{height:6px;border-radius:3px;background:var(--line-2)}
+input[type=range]::-moz-range-progress{height:6px;border-radius:3px;background:var(--accent)}
+input[type=range]::-moz-range-thumb{width:16px;height:16px;border-radius:50%;background:var(--surface);border:2px solid var(--accent)}
+input[type=range]:focus-visible{outline:2px solid var(--accent);outline-offset:3px;border-radius:4px}
+.btns{display:grid;grid-template-columns:1.5fr 1fr;gap:8px}
+.scram{display:flex;flex-direction:column;align-items:center;gap:1px;font-size:15px;font-weight:700;letter-spacing:.12em;color:#fff;background:var(--lamp-red);border:0;border-radius:8px;padding:9px 10px 8px;cursor:pointer;box-shadow:inset 0 -3px 0 rgba(0,0,0,.22)}
+.scram small{font:600 10.5px/1 var(--f-mono);letter-spacing:.2em;opacity:.85}
+.scram:active{transform:translateY(1px);box-shadow:inset 0 -1px 0 rgba(0,0,0,.22)}
+.reset{font-size:14px;font-weight:600;border-radius:8px;border:1px solid var(--line-2);background:var(--surface-2);color:var(--ink);cursor:pointer}
+.reset:not(:disabled):hover{border-color:var(--accent);color:var(--accent)}
+.reset:disabled{opacity:.45;cursor:not-allowed}
+.try{margin-top:14px;padding-top:12px;border-top:1px dashed var(--line-2)}
+.chips{display:flex;flex-wrap:wrap;gap:6px;margin-top:6px}
+.chip{font-size:12.5px;font-weight:500;border:1px solid var(--line-2);background:var(--surface-2);color:var(--ink);border-radius:999px;padding:5px 11px;cursor:pointer}
+.chip:hover{border-color:var(--accent);color:var(--accent)}
+
+#ncv{display:block;width:100%;height:190px;border-radius:6px}
+.legend{list-style:none;margin:10px 0 0;padding:0;display:flex;flex-wrap:wrap;gap:4px 14px;font-size:12px;color:var(--ink-2)}
+.legend i{display:inline-block;width:10px;height:10px;border-radius:50%;margin-right:5px;vertical-align:-1px}
+.legend i.bar{width:5px;height:12px;border-radius:1px}
+.rates{margin:6px 0 0;font:12px/1.5 var(--f-mono);color:var(--muted);font-variant-numeric:tabular-nums}
+#tcv{display:block;width:100%;height:132px}
+.note{font-size:12px;color:var(--muted);margin:0 2px 4px;line-height:1.65}
+
+@media (max-width:980px){
+  html,body{height:auto}
+  .app{height:auto}
+  .stage{grid-template-columns:1fr}
+  .viewcol{border:0;background:none;overflow:visible;border-radius:0;display:flex;flex-direction:column;gap:10px}
+  .vp{position:relative;inset:auto;height:62vh;height:62svh;min-height:340px;max-height:640px;border:1px solid var(--line);border-radius:var(--r);background:var(--vp-bg)}
+  .tour{position:static;padding:0 0 2px}
+  .info{position:static;width:auto;max-height:none;background:var(--surface);-webkit-backdrop-filter:none;backdrop-filter:none;box-shadow:none;border-color:var(--line)}
+  .panel{overflow:visible;padding-right:0}
+}
+@media (max-width:520px){
+  .brand h1{font-size:22px}
+  .hint{display:none}
+  .val b{font-size:21px}
+  .kline b{font-size:19px}
+}
+@media (prefers-reduced-motion:reduce){
+  .lamp.on.flash{animation:none}
+}
+</style>
+</head>
+<body>
+<div class="app">
+  <header class="top">
+    <div class="brand">
+      <h1>压水堆原理沙盘</h1>
+      <p>一座 1000 MW 压水堆核电站的可操作模型。拔插控制棒、调节主泵，看链式反应、温度反馈和停堆保护怎样工作。</p>
+    </div>
+    <div class="spec" aria-label="机组参数">
+      <span>PWR</span><span>3000 MWt</span><span>1000 MWe</span><span>15.5 MPa</span>
+    </div>
+  </header>
+
+  <main class="stage">
+    <section class="viewcol" aria-label="三维电站">
+      <div class="vp" id="vp">
+        <canvas id="scene" aria-label="可旋转的核电站三维模型"></canvas>
+        <div class="labels" id="labels"></div>
+        <div class="vp-top">
+          <p class="hint" id="hint">拖动旋转 · 滚轮缩放 · 右键拖动平移 · 点击部件看说明</p>
+          <div class="tools" role="toolbar" aria-label="视图">
+            <button type="button" id="bView">总览</button>
+            <button type="button" id="bLabels" aria-pressed="true">标签</button>
+            <button type="button" id="bShell" aria-pressed="true">安全壳</button>
+          </div>
+        </div>
+        <div class="tripbar" id="tripbar" role="alert" hidden>
+          <span id="tripText">反应堆已紧急停堆</span>
+          <button type="button" id="tripReset">复位</button>
+        </div>
+        <div class="nogl" id="nogl" hidden>这个浏览器无法启用 WebGL，三维视图暂时不可用。右侧的操作台、中子示意和趋势图仍然可以使用。</div>
+      </div>
+      <nav class="tour" id="tour" aria-label="分步导览"></nav>
+      <article class="info" id="info" aria-live="polite">
+        <div class="info-h"><span class="eyebrow" id="iEy">总览</span><button type="button" class="x" id="iClose" aria-label="收起说明">×</button></div>
+        <h3 id="iTitle">一座压水堆核电站</h3>
+        <div id="iBody"></div>
+        <p class="figs" id="iFigs"></p>
+        <div class="info-nav"><button type="button" class="btn" id="iPrev">上一步</button><button type="button" class="btn primary" id="iNext">开始导览</button></div>
+      </article>
+    </section>
+
+    <aside class="panel" aria-label="控制与读数">
+      <section class="card">
+        <div class="card-h"><h2>反应堆状态</h2><span class="pill ok" id="pill">临界 · 功率稳定</span></div>
+        <div class="kline">
+          <div><span class="lab">有效增殖因子 k<sub>eff</sub></span><b id="kv">1.0000</b></div>
+          <div><span class="lab">反应性 ρ</span><b id="rv">0 pcm</b></div>
+        </div>
+        <p class="explain" id="explain"></p>
+        <div class="readouts">
+          <div class="ro"><span class="lab">热功率</span><span class="val"><b id="pv">100.0</b><i>%</i></span><span class="sub" id="pvs">3000 MWt</span></div>
+          <div class="ro"><span class="lab">电功率</span><span class="val"><b id="ev">1000</b><i>MWe</i></span><span class="sub" id="evs">3000 r/min · 已并网</span></div>
+          <div class="ro" id="roT"><span class="lab">堆芯出口温度</span><span class="val"><b id="tv">325.0</b><i>°C</i></span><span class="sub">入口 292 · 沸点 345 °C</span></div>
+          <div class="ro"><span class="lab">主泵流量</span><span class="val"><b id="fv">100</b><i>%</i></span><span class="sub" id="fvs">约 6.0 万吨/小时</span></div>
+        </div>
+        <div class="annun" id="annun" aria-label="报警光字牌"></div>
+      </section>
+
+      <section class="card">
+        <div class="card-h"><h2>操作台</h2><span class="code">CRDM · RCP · RPS</span></div>
+        <div class="ctl">
+          <div class="ctl-h"><label for="rod">控制棒插入深度</label><output id="rodOut" for="rod">目标 30% · 实际 30%</output></div>
+          <input type="range" id="rod" min="0" max="100" step="1" value="30">
+          <div class="ends"><span>全部拔出</span><span>全部插入</span></div>
+        </div>
+        <div class="ctl">
+          <div class="ctl-h"><label for="pump">主泵流量</label><output id="pumpOut" for="pump">100%</output></div>
+          <input type="range" id="pump" min="20" max="110" step="5" value="100">
+          <div class="ends"><span>20%</span><span>110%</span></div>
+        </div>
+        <div class="btns">
+          <button type="button" class="scram" id="scram">紧急停堆<small>SCRAM</small></button>
+          <button type="button" class="reset" id="reset" disabled>复位</button>
+        </div>
+        <div class="try">
+          <span class="lab">试一试</span>
+          <div class="chips">
+            <button type="button" class="chip" data-x="half">降到半功率</button>
+            <button type="button" class="chip" data-x="pull">拔出全部控制棒</button>
+            <button type="button" class="chip" data-x="pump">主泵降到 50%</button>
+            <button type="button" class="chip" data-x="full">恢复满功率</button>
+          </div>
+        </div>
+      </section>
+
+      <section class="card">
+        <div class="card-h"><h2>堆芯里的中子</h2><span class="code">截面示意</span></div>
+        <canvas id="ncv" aria-label="中子链式反应示意动画"></canvas>
+        <ul class="legend">
+          <li><i style="background:var(--fast)"></i>快中子</li>
+          <li><i style="background:var(--thermal)"></i>热中子</li>
+          <li><i style="background:var(--pin-core)"></i>铀-235 燃料棒</li>
+          <li><i class="bar" style="background:var(--rod2d)"></i>控制棒</li>
+        </ul>
+        <p class="rates" id="nrates">裂变 0 次/秒 · 被控制棒吸收 0 个/秒</p>
+      </section>
+
+      <section class="card">
+        <div class="card-h"><h2>功率趋势</h2><span class="code">近 2 分钟</span></div>
+        <canvas id="tcv" aria-label="热功率趋势图"></canvas>
+      </section>
+
+      <p class="note">这是简化的点堆模型：控制棒价值、温度系数等取示意值，动态过程已加速，读数不代表任何实际机组。三维模型按比例示意，冷却剂、蒸汽和冷却水用流动的小球表示，颜色代表温度或相态。</p>
+    </aside>
+  </main>
+</div>
+
+<script src="vendor/three.min.js"></script>
+<script>
+(function(){
+'use strict';
+const $ = (id) => document.getElementById(id);
+const clamp = (v, a, b) => Math.max(a, Math.min(b, v));
+const lerp = (a, b, t) => a + (b - a) * t;
+const RM = window.matchMedia('(prefers-reduced-motion: reduce)');
+const tok = (n) => getComputedStyle(document.documentElement).getPropertyValue(n).trim();
+
+/* ============================ 物理模型 ============================ */
+const PHY = { W:0.07, E:0.054304, aD:0.034, aM:0.0006, Tc:292, dT:33, tau:0.1, src:2e-6,
+  rodSpeed:0.06, scram:0.6, tripN:1.15, tripT:340, tripFlow:0.30 };
+const S = { rodTarget:0.30, rod:0.30, flowTarget:1, flow:1, n:1, fuel:1, decay:0.065, Th:325,
+  rho:0, k:1, Pth:1, turb:1, online:true, MWe:1000, tripped:false, reason:'' };
+const rodInt = (x) => x - Math.sin(2 * Math.PI * x) / (2 * Math.PI);
+
+function step(dt){
+  const tgt = S.tripped ? 1 : S.rodTarget;
+  const sp = S.tripped ? PHY.scram : PHY.rodSpeed;
+  S.rod += clamp(tgt - S.rod, -sp * dt, sp * dt);
+  S.flow += (S.flowTarget - S.flow) * (1 - Math.exp(-dt / 1.5));
+  const Pth = S.n * 0.935 + S.decay;
+  S.fuel += (Pth - S.fuel) * (1 - Math.exp(-dt / 0.25));
+  const thTarget = PHY.Tc + PHY.dT * Pth / Math.max(S.flow, 0.05);
+  S.Th += (thTarget - S.Th) * (1 - Math.exp(-dt / 1.2));
+  const Tavg = (S.Th + PHY.Tc) / 2;
+  S.rho = PHY.E - PHY.W * rodInt(S.rod) - PHY.aD * S.fuel - PHY.aM * (Tavg - PHY.Tc);
+  S.k = 1 / (1 - S.rho);
+  S.n = clamp(S.n * Math.exp(S.rho / PHY.tau * dt) + PHY.src * dt, 1e-9, 5);
+  S.decay += (0.065 * S.n - S.decay) * (1 - Math.exp(-dt / 20));
+  S.Pth = S.n * 0.935 + S.decay;
+  if (!S.tripped && S.Pth > 0.04) S.turb = Math.min(1, S.turb + dt * 0.12);
+  else S.turb *= Math.exp(-dt / 14);
+  S.online = !S.tripped && S.turb > 0.995;
+  S.MWe = S.online ? 1000 * Math.min(S.Pth, 1.25) : 0;
+  if (!S.tripped){
+    if (S.n > PHY.tripN) trip('中子通量高');
+    else if (S.Th > PHY.tripT) trip('堆芯出口温度高');
+    else if (S.flow < PHY.tripFlow && S.n > 0.02) trip('主泵流量低');
+  }
+}
+
+/* ============================ 界面 ============================ */
+const rodIn = $('rod'), pumpIn = $('pump');
+const setP = (el) => el.style.setProperty('--p', ((el.value - el.min) / (el.max - el.min) * 100) + '%');
+setP(rodIn); setP(pumpIn);
+
+function trip(reason){
+  if (S.tripped) return;
+  S.tripped = true; S.reason = reason; trend.mark = true;
+  onTripChange();
+}
+function reset(){
+  if (!S.tripped) return;
+  S.tripped = false; S.reason = ''; S.rodTarget = 1;
+  onTripChange();
+}
+function onTripChange(){
+  $('tripbar').hidden = !S.tripped;
+  $('tripText').textContent = '反应堆已紧急停堆：' + S.reason;
+  $('reset').disabled = !S.tripped;
+  rodIn.disabled = S.tripped;
+  if (S.tripped || S.rodTarget === 1){ rodIn.value = 100; setP(rodIn); }
+  updateUI();
+}
+rodIn.addEventListener('input', () => { if (!S.tripped) S.rodTarget = rodIn.value / 100; setP(rodIn); updateUI(); });
+pumpIn.addEventListener('input', () => { S.flowTarget = pumpIn.value / 100; setP(pumpIn); updateUI(); });
+$('scram').addEventListener('click', () => trip('手动紧急停堆'));
+$('reset').addEventListener('click', reset);
+$('tripReset').addEventListener('click', reset);
+
+function setRod(v){ S.rodTarget = v; rodIn.value = Math.round(v * 100); setP(rodIn); }
+function setFlow(v){ S.flowTarget = v; pumpIn.value = Math.round(v * 100); setP(pumpIn); }
+function clearTrip(){ if (S.tripped){ S.tripped = false; S.reason = ''; onTripChange(); } }
+document.querySelectorAll('.chip').forEach((b) => b.addEventListener('click', () => {
+  const x = b.dataset.x;
+  if (x === 'half'){ clearTrip(); setRod(0.48); setFlow(1); }
+  else if (x === 'pull'){ clearTrip(); setRod(0); }
+  else if (x === 'pump'){ setFlow(0.5); }
+  else if (x === 'full'){ clearTrip(); setRod(0.30); setFlow(1); }
+  updateUI();
+}));
+
+const LAMPS = [
+  { t:'功率上升', c:'amber', on:(p) => !S.tripped && p > 20 },
+  { t:'功率下降', c:'white', on:(p) => p < -20 && S.Pth > 0.002 },
+  { t:'中子通量高', c:'red', on:() => S.n > 1.06 },
+  { t:'出口温度高', c:'red', on:() => S.Th > 333 },
+  { t:'主泵流量低', c:'amber', on:() => S.flow < 0.6 },
+  { t:'反应堆停堆', c:'red', flash:true, on:() => S.tripped },
+];
+const annun = $('annun');
+LAMPS.forEach((L) => {
+  const d = document.createElement('div');
+  d.className = 'lamp' + (L.flash ? ' flash' : '');
+  d.dataset.c = L.c; d.textContent = L.t;
+  annun.appendChild(d); L.el = d;
+});
+
+function fmtPct(p){
+  if (p >= 10) return p.toFixed(1);
+  if (p >= 1) return p.toFixed(2);
+  if (p >= 0.01) return p.toFixed(3);
+  return '<0.01';
+}
+function status(pcm){
+  if (S.tripped) return { c:'crit', t:'已停堆',
+    x:'停堆原因：' + S.reason + '。控制棒约 2 秒内落入堆芯，裂变迅速停止，但燃料里还有百分之几的衰变热，主泵要继续把它带走。点“复位”后可以重新提棒。' };
+  if (pcm < -20 && S.n < 1e-3) return { c:'idle', t:'次临界 · 停堆状态',
+    x:'控制棒插得很深，k 远小于 1，只有中子源维持着微弱的中子。把控制棒拔到约 65% 以下，k 才会超过 1。' };
+  if (pcm > 20) return { c:'warn', t:'超临界 · 功率上升',
+    x:'k > 1：中子一代比一代多，功率上升。燃料和冷却剂变热后，负反馈会把 k 拉回 1，功率停在新的水平。' };
+  if (pcm < -20) return { c:'cool', t:'次临界 · 功率下降',
+    x:'k < 1：中子一代比一代少，功率下降。冷却剂变冷后反馈回升，功率会停在更低的水平。' };
+  return { c:'ok', t:'临界 · 功率稳定',
+    x:'k = 1：每次裂变放出的中子里，平均恰好有一个去引发下一次裂变，功率保持不变。' };
+}
+let lastStatus = '';
+function updateUI(){
+  const pcm = S.rho * 1e5;
+  $('kv').textContent = S.k.toFixed(4);
+  $('rv').textContent = Math.abs(pcm) < 0.5 ? '0 pcm' : (pcm > 0 ? '+' : '−') + Math.abs(pcm).toFixed(0) + ' pcm';
+  const st = status(pcm);
+  if (st.t !== lastStatus){
+    lastStatus = st.t;
+    const pill = $('pill'); pill.className = 'pill ' + st.c; pill.textContent = st.t;
+  }
+  if ($('explain').textContent !== st.x) $('explain').textContent = st.x;
+  $('pv').textContent = fmtPct(S.Pth * 100);
+  $('pvs').textContent = Math.round(S.Pth * 3000) + ' MWt' + (S.tripped && S.Pth > 0.002 ? ' · 多为衰变热' : '');
+  $('ev').textContent = Math.round(S.MWe);
+  $('evs').textContent = S.online ? '3000 r/min · 已并网' : Math.round(S.turb * 3000) + ' r/min · 未并网';
+  $('tv').textContent = S.Th.toFixed(1);
+  $('roT').classList.toggle('alarm', S.Th > 333);
+  $('fv').textContent = Math.round(S.flow * 100);
+  $('fvs').textContent = '约 ' + (6 * S.flow).toFixed(1) + ' 万吨/小时';
+  const tgt = S.tripped ? 1 : S.rodTarget;
+  $('rodOut').textContent = '目标 ' + Math.round(tgt * 100) + '% · 实际 ' + Math.round(S.rod * 100) + '%';
+  $('pumpOut').textContent = Math.round(S.flowTarget * 100) + '%';
+  LAMPS.forEach((L) => L.el.classList.toggle('on', !!L.on(pcm)));
+}
+
+/* ============================ 功率趋势 ============================ */
+const trend = { data:[], acc:0, mark:false, max:480, dirty:true };
+for (let i = 0; i < trend.max; i++) trend.data.push({ p:100, m:false });
+function sampleTrend(dt){
+  trend.acc += dt;
+  while (trend.acc >= 0.25){
+    trend.acc -= 0.25;
+    trend.data.push({ p:S.Pth * 100, m:trend.mark }); trend.mark = false;
+    if (trend.data.length > trend.max) trend.data.shift();
+    trend.dirty = true;
+  }
+}
+const TC = { cv:$('tcv') }; TC.ctx = TC.cv.getContext('2d');
+let COL = {};
+function readColors(){
+  ['--ink','--ink-2','--muted','--line','--line-2','--accent','--crit','--water','--pin','--pin-core','--rod2d','--fast','--thermal','--flash','--absorb','--surface']
+    .forEach((k) => { COL[k.slice(2)] = tok(k); });
+}
+readColors();
+function sizeCanvas(o){
+  const r = o.cv.getBoundingClientRect();
+  o.w = Math.max(1, r.width); o.h = Math.max(1, r.height); o.dpr = Math.min(window.devicePixelRatio || 1, 2);
+  o.cv.width = Math.round(o.w * o.dpr); o.cv.height = Math.round(o.h * o.dpr);
+}
+function drawChart(){
+  const { ctx } = TC; const w = TC.w, h = TC.h;
+  if (!w) return;
+  ctx.setTransform(TC.dpr, 0, 0, TC.dpr, 0, 0);
+  ctx.clearRect(0, 0, w, h);
+  const L = 34, R = 8, T = 8, B = 20, pw = w - L - R, ph = h - T - B;
+  const y = (v) => T + ph * (1 - clamp(v, 0, 125) / 125);
+  ctx.font = '10.5px "IBM Plex Mono", ui-monospace, monospace';
+  ctx.textBaseline = 'middle';
+  ctx.lineWidth = 1;
+  [0, 50, 100].forEach((v) => {
+    ctx.strokeStyle = COL.line; ctx.beginPath(); ctx.moveTo(L, Math.round(y(v)) + 0.5); ctx.lineTo(w - R, Math.round(y(v)) + 0.5); ctx.stroke();
+    ctx.fillStyle = COL.muted; ctx.textAlign = 'right'; ctx.fillText(v + '%', L - 6, y(v));
+  });
+  ctx.strokeStyle = COL.crit; ctx.setLineDash([4, 4]);
+  ctx.beginPath(); ctx.moveTo(L, Math.round(y(115)) + 0.5); ctx.lineTo(w - R, Math.round(y(115)) + 0.5); ctx.stroke();
+  ctx.setLineDash([]);
+  ctx.fillStyle = COL.crit; ctx.textAlign = 'right'; ctx.textBaseline = 'bottom';
+  ctx.fillText('停堆整定值 115%', w - R, y(115) - 2);
+  const d = trend.data, n = d.length;
+  const x = (i) => L + pw * (i + trend.max - n) / (trend.max - 1);
+  for (let i = 0; i < n; i++) if (d[i].m){
+    ctx.strokeStyle = COL.crit; ctx.globalAlpha = 0.7; ctx.beginPath(); ctx.moveTo(Math.round(x(i)) + 0.5, T); ctx.lineTo(Math.round(x(i)) + 0.5, T + ph); ctx.stroke(); ctx.globalAlpha = 1;
+  }
+  ctx.beginPath(); ctx.moveTo(x(0), y(0));
+  for (let i = 0; i < n; i++) ctx.lineTo(x(i), y(d[i].p));
+  ctx.lineTo(x(n - 1), y(0)); ctx.closePath();
+  ctx.fillStyle = COL.accent; ctx.globalAlpha = 0.13; ctx.fill(); ctx.globalAlpha = 1;
+  ctx.beginPath();
+  for (let i = 0; i < n; i++){ const px = x(i), py = y(d[i].p); if (i) ctx.lineTo(px, py); else ctx.moveTo(px, py); }
+  ctx.strokeStyle = COL.accent; ctx.lineWidth = 1.8; ctx.lineJoin = 'round'; ctx.stroke();
+  const ex = x(n - 1), ey = y(d[n - 1].p);
+  ctx.fillStyle = COL.surface; ctx.beginPath(); ctx.arc(ex, ey, 4, 0, Math.PI * 2); ctx.fill();
+  ctx.fillStyle = COL.accent; ctx.beginPath(); ctx.arc(ex, ey, 2.6, 0, Math.PI * 2); ctx.fill();
+  ctx.fillStyle = COL.muted; ctx.textBaseline = 'alphabetic';
+  ctx.textAlign = 'left'; ctx.fillText('−2 分钟', L, h - 5);
+  ctx.textAlign = 'right'; ctx.fillText('现在', w - R, h - 5);
+}
+
+/* ============================ 中子示意 ============================ */
+const NC = { cv:$('ncv'), ns:[], fx:[], g:1, cnt:{ f:0, a:0 }, rt:0, srcT:0, sp:30, pr:8 };
+NC.ctx = NC.cv.getContext('2d');
+function ncLayout(){
+  sizeCanvas(NC);
+  NC.cols = Math.max(3, Math.floor((NC.w - 24) / NC.sp) + 1);
+  NC.rows = Math.max(3, Math.floor((NC.h - 20) / NC.sp) + 1);
+  NC.ox = (NC.w - (NC.cols - 1) * NC.sp) / 2;
+  NC.oy = (NC.h - (NC.rows - 1) * NC.sp) / 2;
+  NC.rods = [];
+  for (let i = 1; i < NC.cols - 1; i += 3) NC.rods.push(NC.ox + (i + 0.5) * NC.sp);
+}
+function spawnFast(x, y){
+  if (NC.ns.length > 240) return;
+  const a = Math.random() * Math.PI * 2, v = 230 + Math.random() * 60;
+  NC.ns.push({ x, y, vx:Math.cos(a) * v, vy:Math.sin(a) * v, fast:true, st:0.03 + Math.random() * 0.05, pin:-1, age:0 });
+}
+function randPin(){
+  const c = Math.floor(Math.random() * NC.cols), r = Math.floor(Math.random() * NC.rows);
+  return { x:NC.ox + c * NC.sp, y:NC.oy + r * NC.sp };
+}
+function ncStep(dt){
+  if (!NC.w) return;
+  const area = (NC.w * NC.h) / (360 * 190);
+  const target = area * (2 + 48 * Math.pow(clamp(S.n, 0, 1.3), 0.7));
+  const cnt = NC.ns.length;
+  NC.g = clamp(NC.g * Math.exp((target - cnt) / Math.max(target, 3) * dt * 2), 0.03, 8);
+  const pf = clamp(0.3 * NC.g, 0.01, 0.97);
+  if (cnt < Math.max(1, target * 0.25)){
+    NC.srcT -= dt;
+    if (NC.srcT <= 0){ NC.srcT = 0.35; const p = randPin(); spawnFast(p.x, p.y); }
+  }
+  const rb = S.rod * NC.h, TH = 60, pr2 = NC.pr * NC.pr;
+  for (let i = NC.ns.length - 1; i >= 0; i--){
+    const n = NC.ns[i];
+    n.age += dt; n.st -= dt;
+    if (n.st <= 0){
+      const a = Math.random() * Math.PI * 2;
+      let v = Math.hypot(n.vx, n.vy);
+      if (n.fast){
+        v *= 0.8; n.st = 0.05 + Math.random() * 0.05;
+        if (v < TH * 1.25){ n.fast = false; v = TH * (0.8 + Math.random() * 0.4); n.st = 0.3; }
+      } else n.st = 0.25 + Math.random() * 0.35;
+      n.vx = Math.cos(a) * v; n.vy = Math.sin(a) * v;
+    }
+    n.x += n.vx * dt; n.y += n.vy * dt;
+    if (n.x < 2){ n.x = 2; n.vx = Math.abs(n.vx); } else if (n.x > NC.w - 2){ n.x = NC.w - 2; n.vx = -Math.abs(n.vx); }
+    if (n.y < 2){ n.y = 2; n.vy = Math.abs(n.vy); } else if (n.y > NC.h - 2){ n.y = NC.h - 2; n.vy = -Math.abs(n.vy); }
+    let dead = false;
+    for (let r = 0; r < NC.rods.length; r++){
+      if (Math.abs(n.x - NC.rods[r]) < 5 && n.y < rb){ NC.fx.push({ x:n.x, y:n.y, t:0, k:'a' }); NC.cnt.a++; dead = true; break; }
+    }
+    if (!dead){
+      const c = Math.round((n.x - NC.ox) / NC.sp), r = Math.round((n.y - NC.oy) / NC.sp);
+      let inside = -1;
+      if (c >= 0 && c < NC.cols && r >= 0 && r < NC.rows){
+        const px = NC.ox + c * NC.sp, py = NC.oy + r * NC.sp;
+        if ((n.x - px) * (n.x - px) + (n.y - py) * (n.y - py) < pr2){
+          inside = r * NC.cols + c;
+          if (inside !== n.pin && !n.fast){
+            const u = Math.random();
+            if (u < pf){
+              dead = true; NC.cnt.f++;
+              NC.fx.push({ x:px, y:py, t:0, k:'f' });
+              const m = Math.random() < 0.4 ? 3 : 2;
+              for (let j = 0; j < m; j++) spawnFast(px, py);
+            } else if (u < pf + 0.1) dead = true;
+          }
+        }
+      }
+      n.pin = inside;
+    }
+    if (!dead && !n.fast && n.age > 7) dead = true;
+    if (dead) NC.ns.splice(i, 1);
+  }
+  for (let i = NC.fx.length - 1; i >= 0; i--){ NC.fx[i].t += dt; if (NC.fx[i].t > 0.5) NC.fx.splice(i, 1); }
+  NC.rt += dt;
+  if (NC.rt >= 1){
+    $('nrates').textContent = '裂变 ' + Math.round(NC.cnt.f / NC.rt) + ' 次/秒 · 被控制棒吸收 ' + Math.round(NC.cnt.a / NC.rt) + ' 个/秒';
+    NC.cnt.f = 0; NC.cnt.a = 0; NC.rt = 0;
+  }
+}
+function ncDraw(){
+  const ctx = NC.ctx; if (!NC.w) return;
+  ctx.setTransform(NC.dpr, 0, 0, NC.dpr, 0, 0);
+  ctx.fillStyle = COL.water; ctx.fillRect(0, 0, NC.w, NC.h);
+  for (let r = 0; r < NC.rows; r++) for (let c = 0; c < NC.cols; c++){
+    const x = NC.ox + c * NC.sp, y = NC.oy + r * NC.sp;
+    ctx.fillStyle = COL.pin; ctx.beginPath(); ctx.arc(x, y, NC.pr, 0, Math.PI * 2); ctx.fill();
+    ctx.fillStyle = COL['pin-core']; ctx.beginPath(); ctx.arc(x, y, 2.6, 0, Math.PI * 2); ctx.fill();
+  }
+  const rb = S.rod * NC.h;
+  ctx.fillStyle = COL.rod2d;
+  NC.rods.forEach((rx) => { if (rb > 0.5){ ctx.fillRect(rx - 4, 0, 8, rb); ctx.fillRect(rx - 6, rb - 3, 12, 3); } });
+  for (const f of NC.fx){
+    const a = 1 - f.t / 0.5;
+    ctx.globalAlpha = a;
+    if (f.k === 'f'){
+      ctx.strokeStyle = COL.flash; ctx.lineWidth = 2;
+      ctx.beginPath(); ctx.arc(f.x, f.y, 4 + f.t * 44, 0, Math.PI * 2); ctx.stroke();
+      ctx.fillStyle = COL.flash; ctx.beginPath(); ctx.arc(f.x, f.y, 6 * a + 2, 0, Math.PI * 2); ctx.fill();
+    } else {
+      ctx.strokeStyle = COL.absorb; ctx.lineWidth = 1.5;
+      ctx.beginPath(); ctx.arc(f.x, f.y, 2 + f.t * 14, 0, Math.PI * 2); ctx.stroke();
+    }
+  }
+  ctx.globalAlpha = 1;
+  ctx.lineCap = 'round';
+  for (const n of NC.ns){
+    if (n.fast){
+      ctx.strokeStyle = COL.fast; ctx.lineWidth = 2;
+      ctx.beginPath(); ctx.moveTo(n.x - n.vx * 0.035, n.y - n.vy * 0.035); ctx.lineTo(n.x, n.y); ctx.stroke();
+      ctx.fillStyle = COL.fast; ctx.beginPath(); ctx.arc(n.x, n.y, 2.2, 0, Math.PI * 2); ctx.fill();
+    } else {
+      ctx.fillStyle = COL.thermal; ctx.beginPath(); ctx.arc(n.x, n.y, 2.4, 0, Math.PI * 2); ctx.fill();
+    }
+  }
+}
+
+/* ============================ 讲解内容 ============================ */
+const INFO = {
+  intro:{ title:'一座压水堆核电站', figs:'3000 MW 热功率 · 1000 MW 电功率 · 效率约 33%', body:[
+    '热量从堆芯出发，依次经过三个互不相通的水回路：一回路把堆芯的热带到蒸汽发生器，二回路的蒸汽推动汽轮机发电，第三回路的冷却水把剩下的热排到大气里。',
+    '按下方 1–7 的顺序走一遍，或者直接在操作台拔出控制棒，看反应堆怎样响应。']},
+  fission:{ title:'核裂变', figs:'U-235 + n → 2 块碎片 + 2~3 n + 约 200 MeV', body:[
+    '铀-235 原子核吸收一个慢中子后分裂成两块碎片，同时放出 2–3 个新中子和约 200 MeV 能量。碎片在燃料芯块里高速飞散，动能变成热。',
+    '新中子再去击中别的铀核，就形成链式反应。真实堆芯由 157 组燃料组件组成，每组是 17×17 的棒阵，燃料是富集度 3–5% 的二氧化铀芯块。堆芯周围的蓝光代表切连科夫辐射。']},
+  moderator:{ title:'慢化：让中子慢下来', figs:'约 2 MeV → 0.025 eV · 与氢核碰撞约 18 次', body:[
+    '裂变放出的是快中子，铀-235 很难抓住它们。压水堆用普通水作慢化剂：中子与水中的氢核反复碰撞，降到热中子能区后，引发裂变的概率高出几百倍。',
+    '“堆芯里的中子”示意图画的就是这个过程：橙色快中子碰撞变慢，变成蓝色热中子后才容易引发裂变。水温升高、密度下降时慢化变弱，k 随之下降，这种负反馈让压水堆天然趋于稳定。']},
+  rods:{ title:'控制棒与临界', figs:'反应性 ρ = (k − 1)/k · 1 pcm = 10⁻⁵', body:[
+    '控制棒由银-铟-镉合金或碳化硼制成，强烈吸收中子。插得越深，被吸收的中子越多，有效增殖因子 k 越小。k = 1 叫临界，功率稳定；k > 1 功率上升；k < 1 功率下降。',
+    '约 0.65% 的中子来自裂变碎片的衰变，要晚几秒到几十秒才放出。正是这些缓发中子让功率变化慢到可以控制。紧急停堆时，控制棒靠重力在约 2 秒内全部落入堆芯。']},
+  primary:{ title:'一回路：高压热水', figs:'15.5 MPa · 292 → 325 °C · 每小时约 6 万吨', body:[
+    '冷却剂在 15.5 MPa 的高压下保持液态：约 292 °C 从压力容器外圈流下，由底部进入堆芯，吸热后约 325 °C 流出。这个压力下水要到约 345 °C 才沸腾，所以叫“压水堆”。',
+    '主泵推动冷却剂循环，稳压器维持压力。一回路的水带有放射性，始终封闭在安全壳内。']},
+  sg:{ title:'蒸汽发生器', figs:'二回路约 7 MPa · 蒸汽约 285 °C', body:[
+    '一回路热水流过数千根倒 U 形传热管，把热量隔着管壁传给管外的二回路水。二回路压力较低，水在这里沸腾成饱和蒸汽。',
+    '两个回路的水互不接触，所以蒸汽不带放射性，可以送出安全壳去推动汽轮机。']},
+  turbine:{ title:'汽轮机与发电机', figs:'3000 r/min · 50 Hz · 热效率约 33%', body:[
+    '蒸汽依次冲过高压缸和低压缸的叶片，推动转子旋转，带动发电机发电。并网时转速锁定在 3000 转/分，对应 50 Hz 的电网频率，功率高低体现在转矩上。',
+    '3000 MW 的热功率大约能发出 1000 MW 电。另外约三分之二的热无法变成电，要在下一步排掉。']},
+  condenser:{ title:'冷凝器与冷却塔', figs:'约 2000 MW 废热排入环境', body:[
+    '做完功的乏汽在冷凝器里被冷却水凝结成水，再由给水泵送回蒸汽发生器，二回路就此闭合。',
+    '冷却水把热量带到冷却塔，沿海电站则直接用海水。冷却塔冒出的是普通水蒸气，与一回路毫无接触，不含放射性。']},
+  pzr:{ title:'稳压器', figs:'15.5 MPa · 汽水共存 · 约 345 °C', body:[
+    '一只一半是水、一半是蒸汽的高压罐，与热管段相连。底部电加热器让水汽化以升压，顶部喷淋让蒸汽凝结以降压，把一回路压力稳定在 15.5 MPa 左右。']},
+  pump:{ title:'主泵', figs:'电机约 6–7 MW · 每台约 2 万 m³/h', body:[
+    '立式离心泵，顶部的大飞轮让它断电后还能惰转一阵，继续带走热量。流量下降时，冷却剂在堆芯里停留更久，出口温度升高；流量过低会触发停堆。',
+    '可以在操作台把主泵流量调到 50% 试试。']},
+  containment:{ title:'安全壳', figs:'三道屏障：燃料包壳 · 一回路压力边界 · 安全壳', body:[
+    '预应力混凝土外壳，内衬钢板，把一回路所有设备包在里面。即使管道破裂，放射性物质也被挡在壳内。它是燃料包壳、一回路压力边界之后的第三道屏障。',
+    '工具栏里的“安全壳”按钮可以隐藏它，方便看清内部。']},
+};
+const TOUR = ['fission','moderator','rods','primary','sg','turbine','condenser'];
+const TOUR_NAMES = ['核裂变','慢化','控制棒','一回路','蒸汽发生器','汽轮发电','冷凝与冷却'];
+const VIEWS = {
+  intro:{ t:[5.2,4.0,-1.8], r:46, th:0.36, ph:1.1 },
+  fission:{ t:[-8.8,3.5,0], r:7.4, th:0.3, ph:1.28 },
+  moderator:{ t:[-8.7,3.3,0.2], r:5.8, th:-0.08, ph:1.36 },
+  rods:{ t:[-8.8,6.4,0], r:10, th:0.35, ph:1.12 },
+  primary:{ t:[-6.3,5.2,-0.2], r:16.5, th:0.55, ph:1.08 },
+  sg:{ t:[-4.0,7.8,0], r:11, th:0.28, ph:1.2 },
+  turbine:{ t:[9.2,3.0,0.6], r:14.5, th:0.32, ph:1.08 },
+  condenser:{ t:[12.2,3.4,-3.4], r:22, th:0.62, ph:1.04 },
+  pzr:{ t:[-6.2,8.2,2.4], r:8.5, th:0.35, ph:1.2 },
+  pump:{ t:[-6.0,4.0,-1.8], r:8, th:0.95, ph:1.15 },
+  containment:{ t:[-6.3,6.5,0], r:23, th:0.45, ph:1.1 },
+};
+
+const tourEl = $('tour');
+TOUR.forEach((k, i) => {
+  const b = document.createElement('button'); b.type = 'button'; b.dataset.k = k;
+  const n = document.createElement('span'); n.className = 'num'; n.textContent = i + 1;
+  b.append(n, document.createTextNode(TOUR_NAMES[i]));
+  b.addEventListener('click', () => showInfo(k));
+  tourEl.appendChild(b);
+});
+const info = $('info');
+let infoKey = 'intro';
+function showInfo(key, fly = true){
+  const d = INFO[key]; if (!d) return;
+  infoKey = key; info.hidden = false;
+  const ti = TOUR.indexOf(key);
+  $('iEy').textContent = ti >= 0 ? '第 ' + (ti + 1) + ' 步 / 共 7 步' : (key === 'intro' ? '总览' : '部件');
+  $('iTitle').textContent = d.title;
+  $('iBody').replaceChildren(...d.body.map((t) => { const p = document.createElement('p'); p.textContent = t; return p; }));
+  $('iFigs').textContent = d.figs;
+  $('iPrev').hidden = !(ti > 0);
+  $('iNext').textContent = key === 'intro' ? '开始导览' : (ti >= 0 && ti < 6) ? '下一步' : '回到总览';
+  tourEl.querySelectorAll('button').forEach((b) => b.classList.toggle('on', b.dataset.k === key));
+  LBL.forEach((L) => L.el.classList.toggle('on', L.key === key));
+  if (fly && gl) flyTo(VIEWS[key] || VIEWS.intro);
+}
+$('iNext').addEventListener('click', () => {
+  const ti = TOUR.indexOf(infoKey);
+  if (infoKey === 'intro') showInfo(TOUR[0]);
+  else if (ti >= 0 && ti < 6) showInfo(TOUR[ti + 1]);
+  else showInfo('intro');
+});
+$('iPrev').addEventListener('click', () => { const ti = TOUR.indexOf(infoKey); if (ti > 0) showInfo(TOUR[ti - 1]); });
+$('iClose').addEventListener('click', () => {
+  info.hidden = true;
+  tourEl.querySelectorAll('button').forEach((b) => b.classList.remove('on'));
+  LBL.forEach((L) => L.el.classList.remove('on'));
+});
+document.addEventListener('keydown', (e) => { if (e.key === 'Escape' && !info.hidden) $('iClose').click(); });
+if (window.matchMedia('(pointer: coarse)').matches) $('hint').textContent = '单指旋转 · 双指缩放和平移 · 轻点部件看说明';
+
+/* ============================ 三维场景 ============================ */
+let gl = false, renderer, scene, camera, raycaster, V;
+const R = {}, pickables = [], LBL = [];
+const cam = { tx:5.2, ty:4.0, tz:-1.8, r:46, th:0.36, ph:1.1 };
+const goal = { tx:5.2, ty:4.0, tz:-1.8, r:46, th:0.36, ph:1.1, active:false };
+let vpW = 1, vpH = 1, viewShift = 0;
+const CUT_S = 0.3 + Math.PI / 4, CUT_L = 1.5 * Math.PI, SPH_S = CUT_S + Math.PI / 2;
+const TCUT_S = Math.PI / 2 + 0.3, TCUT_L = 1.5 * Math.PI - 0.5;
+
+const LABELS = [
+  ['堆芯','fission',[-8.45,3.4,1.25]],
+  ['压力容器','primary',[-10.35,6.3,0]],
+  ['控制棒驱动机构','rods',[-8.8,11.0,0]],
+  ['稳压器','pzr',[-7.0,9.4,2.9]],
+  ['主泵','pump',[-6.2,5.8,-2.0]],
+  ['蒸汽发生器','sg',[-4.0,13.25,0]],
+  ['汽轮机','turbine',[6.6,5.3,0.45]],
+  ['发电机','turbine',[12.1,4.45,0.2]],
+  ['冷凝器','condenser',[7.9,1.1,1.55]],
+  ['冷却塔','condenser',[17,10.9,-7]],
+  ['至电网','turbine',[20.5,7.4,3.4]],
+  ['安全壳','containment',[-11.2,9.4,2.2]],
+];
+
+function build3D(){
+  V = THREE.Vector3;
+  const canvas = $('scene');
+  renderer = new THREE.WebGLRenderer({ canvas, antialias:true });
+  renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
+  scene = new THREE.Scene();
+  scene.background = new THREE.Color(0xdce3dc);
+  scene.fog = new THREE.Fog(0xdce3dc, 55, 130);
+  camera = new THREE.PerspectiveCamera(38, 1, 0.1, 400);
+  raycaster = new THREE.Raycaster();
+
+  R.hemi = new THREE.HemisphereLight(0xffffff, 0x7f8c84, 0.85); scene.add(R.hemi);
+  const d1 = new THREE.DirectionalLight(0xffffff, 0.8); d1.position.set(12, 22, 16); scene.add(d1);
+  const d2 = new THREE.DirectionalLight(0xdfe8ff, 0.3); d2.position.set(-16, 10, -12); scene.add(d2);
+
+  R.ground = new THREE.Mesh(new THREE.PlaneGeometry(240, 240), new THREE.MeshBasicMaterial({ color:0xcfd7ce }));
+  R.ground.rotation.x = -Math.PI / 2; scene.add(R.ground);
+
+  const std = (color, o = {}) => new THREE.MeshStandardMaterial(Object.assign({ color, roughness:0.5, metalness:0.3 }, o));
+  const DS = THREE.DoubleSide;
+  const glass = (color, op = 0.3) => new THREE.MeshStandardMaterial({ color, transparent:true, opacity:op, roughness:0.25, metalness:0, depthWrite:false });
+  const M = {
+    steel: std(0xaab4af, { metalness:0.5, roughness:0.42 }),
+    steelCut: std(0xaab4af, { metalness:0.5, roughness:0.45, side:DS }),
+    dark: std(0x505b57, { metalness:0.45 }),
+    darkCut: std(0x5d6864, { metalness:0.4, side:DS }),
+    white: std(0xdfe4df, { roughness:0.75, metalness:0.05 }),
+    whiteCut: std(0xdfe4df, { roughness:0.75, metalness:0.05, side:DS }),
+    turbCut: std(0x5d8174, { roughness:0.55, side:DS }),
+    gen: std(0x4d6479, { roughness:0.5, metalness:0.35 }),
+    blade: std(0xcdd4d0, { metalness:0.6, roughness:0.3 }),
+    slab: std(0xb8beb5, { roughness:1, metalness:0 }),
+    concrete: std(0xc6cac2, { roughness:0.95, metalness:0, side:DS }),
+    copper: std(0xc08a5c, { metalness:0.6, roughness:0.35 }),
+    rod: std(0x262d2b, { metalness:0.6, roughness:0.4 }),
+    fuel: std(0x9aa39f, { metalness:0.3, roughness:0.5, emissive:0x2f6bff, emissiveIntensity:0.5 }),
+    cond: std(0x7d8883, { roughness:0.6 }),
+    ctube: std(0x3f9c95, { roughness:0.4 }),
+    pylon: std(0x8d9791, { metalness:0.5 }),
+    mark: std(0xe0a526, { roughness:0.5, metalness:0.1 }),
+    basin: new THREE.MeshStandardMaterial({ color:0x3b9d9a, roughness:0.2, metalness:0.1 }),
+    gHot: glass(0xe06a45, 0.3), gCold: glass(0x4a8fd6, 0.3), gSteam: glass(0xaab4b8, 0.34),
+    gFeed: glass(0x6fb4e8, 0.3), gCool: glass(0x3aa7a0, 0.3), gCond: glass(0x7d8883, 0.22),
+  };
+  R.M = M;
+
+  const add = (geo, mat, part, parent) => {
+    const m = new THREE.Mesh(geo, mat);
+    if (part){ m.userData.part = part; pickables.push(m); }
+    (parent || scene).add(m);
+    return m;
+  };
+  const tube = (pts, r, mat, part, closed = false, seg = 64) => {
+    const c = new THREE.CatmullRomCurve3(pts.map((p) => new V(p[0], p[1], p[2])), closed, 'centripetal');
+    return add(new THREE.TubeGeometry(c, seg, r, 12, closed), mat, part);
+  };
+  const bar = (a, b, r, mat, part, parent) => {
+    const d = new V(b[0] - a[0], b[1] - a[1], b[2] - a[2]); const len = d.length();
+    const m = add(new THREE.CylinderGeometry(r, r, len, 6), mat, part, parent);
+    m.position.set((a[0] + b[0]) / 2, (a[1] + b[1]) / 2, (a[2] + b[2]) / 2);
+    m.quaternion.setFromUnitVectors(new V(0, 1, 0), d.normalize());
+    return m;
+  };
+  const alongX = (g) => { g.rotateZ(Math.PI / 2); return g; };
+
+  /* 基础 */
+  add(new THREE.CylinderGeometry(5.6, 5.8, 0.3, 64), M.slab).position.set(-6.3, 0.15, 0);
+  add(new THREE.BoxGeometry(14.4, 0.3, 6.6), M.slab).position.set(8.6, 0.15, 0.5);
+
+  /* 压力容器（剖视） */
+  const RX = -8.8;
+  add(new THREE.CylinderGeometry(1.4, 1.4, 5.0, 56, 1, true, CUT_S, CUT_L), M.steelCut, 'primary').position.set(RX, 4.3, 0);
+  add(new THREE.SphereGeometry(1.4, 56, 20, SPH_S, CUT_L, Math.PI / 2, Math.PI / 2), M.steelCut, 'primary').position.set(RX, 1.8, 0);
+  add(new THREE.SphereGeometry(1.4, 56, 20, SPH_S, CUT_L, 0, Math.PI / 2), M.steelCut, 'rods').position.set(RX, 6.8, 0);
+  const fl = add(new THREE.TorusGeometry(1.47, 0.09, 8, 64), M.dark, 'primary'); fl.rotation.x = Math.PI / 2; fl.position.set(RX, 6.8, 0);
+  [0.45, -0.45].forEach((z) => { const nz = add(alongX(new THREE.CylinderGeometry(0.28, 0.3, 0.7, 20)), M.steel, 'primary'); nz.position.set(RX + 1.55, 6.0, z); });
+  add(new THREE.CylinderGeometry(1.15, 1.15, 3.7, 48, 1, true, CUT_S, CUT_L), M.darkCut, 'fission').position.set(RX, 3.75, 0);
+  add(new THREE.CylinderGeometry(1.15, 1.15, 0.12, 48), M.dark, 'fission').position.set(RX, 2.05, 0);
+
+  /* 堆芯燃料组件 */
+  const pitch = 0.27, cells = [];
+  for (let i = -3; i <= 3; i++) for (let j = -3; j <= 3; j++) if (Math.hypot(i, j) <= 3.3) cells.push([i, j]);
+  R.fuel = new THREE.InstancedMesh(new THREE.BoxGeometry(0.2, 2.4, 0.2), M.fuel, cells.length);
+  const m4 = new THREE.Matrix4();
+  cells.forEach(([i, j], k) => { m4.makeTranslation(RX + i * pitch, 3.4, j * pitch); R.fuel.setMatrixAt(k, m4); });
+  R.fuel.userData.part = 'fission'; pickables.push(R.fuel); scene.add(R.fuel);
+  R.glow = new THREE.Mesh(new THREE.CylinderGeometry(1.08, 1.08, 2.6, 40, 1, true),
+    new THREE.MeshBasicMaterial({ color:0x3f7cff, transparent:true, opacity:0.3, blending:THREE.AdditiveBlending, depthWrite:false, side:DS }));
+  R.glow.position.set(RX, 3.4, 0); scene.add(R.glow);
+  R.coreLight = new THREE.PointLight(0x4a82ff, 1.5, 7, 2); R.coreLight.position.set(RX + 0.2, 3.4, 0.7); scene.add(R.coreLight);
+
+  /* 控制棒与驱动机构 */
+  R.rods = new THREE.Group(); scene.add(R.rods);
+  const rodG = new THREE.CylinderGeometry(0.04, 0.04, 2.4, 8), shaftG = new THREE.CylinderGeometry(0.022, 0.022, 3.0, 6);
+  const hubG = new THREE.BoxGeometry(0.16, 0.05, 0.16), houseG = new THREE.CylinderGeometry(0.075, 0.075, 2.5, 10);
+  [-1.5, -0.5, 0.5, 1.5].forEach((a) => [-1.5, -0.5, 0.5, 1.5].forEach((b) => {
+    if (Math.abs(a) === 1.5 && Math.abs(b) === 1.5) return;
+    const x = RX + a * pitch, z = b * pitch;
+    add(rodG, M.rod, 'rods', R.rods).position.set(x, 5.8, z);
+    add(hubG, M.mark, 'rods', R.rods).position.set(x, 7.02, z);
+    add(shaftG, M.steel, 'rods', R.rods).position.set(x, 8.5, z);
+    add(houseG, M.steel, 'rods').position.set(x, 8.75, z);
+  }));
+
+  /* 蒸汽发生器（剖视） */
+  const SX = -4.0;
+  add(new THREE.SphereGeometry(0.95, 40, 14, SPH_S, CUT_L, Math.PI / 2, Math.PI / 2), M.whiteCut, 'sg').position.set(SX, 5.4, 0);
+  add(new THREE.CylinderGeometry(0.95, 0.95, 3.6, 48, 1, true, CUT_S, CUT_L), M.whiteCut, 'sg').position.set(SX, 7.2, 0);
+  add(new THREE.CylinderGeometry(1.15, 0.95, 0.6, 48, 1, true, CUT_S, CUT_L), M.whiteCut, 'sg').position.set(SX, 9.3, 0);
+  add(new THREE.CylinderGeometry(1.15, 1.15, 1.4, 48, 1, true, CUT_S, CUT_L), M.whiteCut, 'sg').position.set(SX, 10.3, 0);
+  add(new THREE.SphereGeometry(1.15, 48, 14, SPH_S, CUT_L, 0, Math.PI / 2), M.whiteCut, 'sg').position.set(SX, 11.0, 0);
+  add(new THREE.CylinderGeometry(0.93, 0.93, 0.12, 40), M.dark, 'sg').position.set(SX, 5.4, 0);
+  [0.3, -0.15].forEach((z) => [0.25, 0.4, 0.55, 0.7].forEach((d) => {
+    const top = 8.2 + d;
+    tube([[SX - d, 5.45, z], [SX - d, 8.2, z], [SX - d * 0.72, top - d * 0.28, z], [SX, top, z], [SX + d * 0.72, top - d * 0.28, z], [SX + d, 8.2, z], [SX + d, 5.45, z]], 0.035, M.copper, 'sg', false, 48);
+  }));
+  for (let k = 0; k < 3; k++){ const a = k * 2.094 + 0.5; bar([SX + 0.6 * Math.sin(a), 0.3, 0.6 * Math.cos(a)], [SX + 0.6 * Math.sin(a), 4.7, 0.6 * Math.cos(a)], 0.07, M.dark, 'sg'); }
+
+  /* 稳压器 */
+  add(new THREE.CylinderGeometry(0.55, 0.55, 3.2, 32), M.white, 'pzr').position.set(-6.2, 8.4, 2.4);
+  add(new THREE.SphereGeometry(0.55, 32, 12, 0, Math.PI * 2, 0, Math.PI / 2), M.white, 'pzr').position.set(-6.2, 10.0, 2.4);
+  add(new THREE.SphereGeometry(0.55, 32, 12, 0, Math.PI * 2, Math.PI / 2, Math.PI / 2), M.white, 'pzr').position.set(-6.2, 6.8, 2.4);
+  add(new THREE.CylinderGeometry(0.34, 0.4, 5.95, 20), M.dark, 'pzr').position.set(-6.2, 3.28, 2.4);
+  tube([[-6.2, 6.25, 2.4], [-6.22, 5.6, 1.8], [-6.3, 5.8, 0.9], [-6.35, 5.95, 0.5]], 0.07, M.steel, 'pzr', false, 24);
+
+  /* 主泵 */
+  const pc = add(new THREE.SphereGeometry(0.52, 24, 16), M.steel, 'pump'); pc.scale.set(1, 0.85, 1); pc.position.set(-6.2, 3.6, -2.0);
+  add(new THREE.CylinderGeometry(0.36, 0.4, 1.1, 24), M.gen, 'pump').position.set(-6.2, 4.65, -2.0);
+  R.fly = new THREE.Group(); R.fly.position.set(-6.2, 5.28, -2.0); scene.add(R.fly);
+  add(new THREE.CylinderGeometry(0.46, 0.46, 0.14, 32), M.dark, 'pump', R.fly);
+  add(new THREE.BoxGeometry(0.4, 0.06, 0.1), M.mark, 'pump', R.fly).position.set(0.2, 0.09, 0);
+  for (let k = 0; k < 3; k++){ const a = k * 2.094; bar([-6.2 + 0.4 * Math.sin(a), 0.3, -2.0 + 0.4 * Math.cos(a)], [-6.2 + 0.35 * Math.sin(a), 3.2, -2.0 + 0.35 * Math.cos(a)], 0.06, M.dark, 'pump'); }
+
+  /* 一回路管道 */
+  tube([[-6.9, 6.0, 0.45], [-5.8, 5.85, 0.43], [-5.0, 5.0, 0.36], [-4.45, 4.56, 0.3]], 0.2, M.gHot, 'primary', false, 40);
+  tube([[-3.55, 4.56, 0.1], [-3.4, 3.6, -0.6], [-3.8, 2.9, -1.6], [-5.0, 2.9, -2.2], [-5.8, 3.2, -2.1]], 0.2, M.gCold, 'primary', false, 48);
+  tube([[-6.5, 4.0, -1.75], [-6.75, 5.6, -0.9], [-6.9, 6.0, -0.45]], 0.2, M.gCold, 'primary', false, 32);
+
+  /* 二回路管道 */
+  tube([[-4.0, 12.15, 0], [-4.0, 12.7, 0], [-3.0, 12.95, 0], [0.6, 12.95, 0], [1.8, 12.3, 0], [1.9, 5.6, 0], [2.7, 4.7, 0], [3.6, 4.05, 0]], 0.2, M.gSteam, 'sg', false, 96);
+  tube([[5.0, 3.95, 0.45], [5.3, 4.85, 0.45], [7.4, 4.95, 0.45], [7.9, 4.45, 0.45]], 0.2, M.gSteam, 'turbine', false, 40);
+  tube([[5.8, 0.6, 1.45], [4.0, 0.6, 2.5], [2.4, 0.6, 2.7], [0.5, 0.7, 2.7], [-1.5, 1.2, 2.3], [-2.4, 4.0, 1.6], [-2.9, 7.8, 1.0], [-3.3, 8.1, 0.7]], 0.14, M.gFeed, 'condenser', false, 96);
+
+  /* 汽轮机 */
+  const TY = 3.2;
+  add(alongX(new THREE.CylinderGeometry(0.85, 0.85, 2.1, 40, 1, true, TCUT_S, TCUT_L)), M.turbCut, 'turbine').position.set(3.95, TY, 0);
+  add(alongX(new THREE.CylinderGeometry(1.3, 1.3, 4.8, 48, 1, true, TCUT_S, TCUT_L)), M.turbCut, 'turbine').position.set(7.9, TY, 0);
+  [[2.9, 0.85], [5.0, 0.85], [5.5, 1.3], [10.3, 1.3]].forEach(([x, r]) => {
+    const g = new THREE.RingGeometry(0.14, r, 40); g.rotateY(Math.PI / 2);
+    add(g, M.turbCut, 'turbine').position.set(x, TY, 0);
+  });
+  R.rotor = new THREE.Group(); R.rotor.position.set(0, TY, 0); scene.add(R.rotor);
+  add(alongX(new THREE.CylinderGeometry(0.1, 0.1, 11.8, 12)), M.steel, 'turbine', R.rotor).position.set(8.5, 0, 0);
+  const discs = [];
+  [3.2, 3.55, 3.9, 4.25, 4.6].forEach((x, i) => discs.push([x, 0.38 + i * 0.075]));
+  [0.45, 0.9, 1.35, 1.8, 2.2].forEach((o, i) => { const r = 0.6 + i * 0.145; discs.push([7.9 - o, r], [7.9 + o, r]); });
+  const NB = 14, blades = new THREE.InstancedMesh(new THREE.BoxGeometry(0.05, 1, 0.14), M.blade, discs.length * NB);
+  const dummy = new THREE.Object3D(); let bi = 0;
+  discs.forEach(([x, r]) => {
+    const rh = r * 0.5, L = r - rh - 0.04, rc = rh + L / 2;
+    add(alongX(new THREE.CylinderGeometry(rh, rh, 0.08, 24)), M.steel, 'turbine', R.rotor).position.set(x, 0, 0);
+    for (let k = 0; k < NB; k++){
+      const a = k * Math.PI * 2 / NB;
+      dummy.position.set(x, rc * Math.sin(a), rc * Math.cos(a));
+      dummy.rotation.set(Math.PI / 2 - a, 0.5, 0);
+      dummy.scale.set(1, L, 1); dummy.updateMatrix();
+      blades.setMatrixAt(bi++, dummy.matrix);
+    }
+  });
+  blades.userData.part = 'turbine'; pickables.push(blades); R.rotor.add(blades);
+  [5.25, 10.55].forEach((x) => {
+    add(alongX(new THREE.CylinderGeometry(0.3, 0.3, 0.12, 20)), M.dark, 'turbine', R.rotor).position.set(x, 0, 0);
+    add(new THREE.BoxGeometry(0.14, 0.12, 0.1), M.mark, 'turbine', R.rotor).position.set(x, 0.3, 0);
+  });
+  add(new THREE.BoxGeometry(2.4, 2.05, 2.0), M.slab, 'turbine').position.set(3.95, 1.325, 0);
+
+  /* 发电机、变压器、电网 */
+  add(alongX(new THREE.CylinderGeometry(0.95, 0.95, 2.6, 40)), M.gen, 'turbine').position.set(12.1, TY, 0);
+  [10.8, 13.4].forEach((x) => { const s = add(new THREE.SphereGeometry(0.95, 32, 16), M.gen, 'turbine'); s.scale.set(0.28, 1, 1); s.position.set(x, TY, 0); });
+  add(alongX(new THREE.CylinderGeometry(0.45, 0.45, 0.7, 24)), M.dark, 'turbine').position.set(13.95, TY, 0);
+  add(new THREE.BoxGeometry(3.0, 1.95, 2.0), M.slab, 'turbine').position.set(12.1, 1.275, 0);
+  add(new THREE.BoxGeometry(1.4, 1.3, 1.0), M.dark, 'turbine').position.set(15.3, 0.95, 2.3);
+  for (let k = 0; k < 5; k++) add(new THREE.BoxGeometry(0.06, 1.0, 1.2), M.cond, 'turbine').position.set(14.75 + k * 0.28, 0.95, 2.3);
+  for (let k = 0; k < 3; k++) add(new THREE.CylinderGeometry(0.06, 0.08, 0.5, 8), M.white, 'turbine').position.set(14.9 + k * 0.4, 1.85, 2.3);
+  const PX = 20.5, PZ = 3.4;
+  [[-1, -1], [1, -1], [1, 1], [-1, 1]].forEach(([sx, sz]) => bar([PX + sx * 0.8, 0, PZ + sz * 0.8], [PX + sx * 0.22, 7, PZ + sz * 0.22], 0.05, M.pylon, 'turbine'));
+  bar([PX - 1.8, 6.4, PZ], [PX + 1.8, 6.4, PZ], 0.05, M.pylon, 'turbine');
+  bar([PX - 0.8, 0.2, PZ - 0.8], [PX + 0.45, 3.5, PZ + 0.45], 0.03, M.pylon, 'turbine');
+  bar([PX + 0.8, 0.2, PZ - 0.8], [PX - 0.45, 3.5, PZ + 0.45], 0.03, M.pylon, 'turbine');
+  bar([PX - 0.45, 3.5, PZ - 0.45], [PX + 0.3, 6.4, PZ + 0.3], 0.03, M.pylon, 'turbine');
+  const wirePts = [[13.0, 4.15, 0.6], [13.9, 4.7, 1.4], [14.9, 3.2, 2.1], [15.3, 2.1, 2.3], [16.4, 3.9, 2.7], [18.6, 5.8, 3.1], [20.5, 6.35, 3.4]];
+  tube(wirePts, 0.035, M.dark, 'turbine', false, 80);
+
+  /* 冷凝器与给水泵 */
+  const condFront = M.gCond;
+  const cond = new THREE.Mesh(new THREE.BoxGeometry(4.8, 1.5, 2.8), [M.cond, M.cond, M.cond, M.cond, condFront, M.cond]);
+  cond.position.set(7.9, 1.05, 0); cond.userData.part = 'condenser'; pickables.push(cond); scene.add(cond);
+  for (let a = 0; a < 3; a++) for (let b = 0; b < 3; b++) add(alongX(new THREE.CylinderGeometry(0.05, 0.05, 4.6, 8)), M.ctube, 'condenser').position.set(7.9, 0.6 + a * 0.4, -0.9 + b * 0.9);
+  add(alongX(new THREE.CylinderGeometry(0.28, 0.28, 0.6, 16)), M.steel, 'condenser').position.set(2.1, 0.6, 2.7);
+  add(alongX(new THREE.CylinderGeometry(0.22, 0.22, 0.6, 16)), M.gen, 'condenser').position.set(1.5, 0.6, 2.7);
+
+  /* 冷却塔 */
+  const TX = 17, TZ = -7;
+  const prof = [[3.4, 0.95], [3.05, 2.6], [2.6, 5.0], [2.3, 7.4], [2.35, 8.8], [2.6, 10.2]].map(([r, y]) => new THREE.Vector2(r, y));
+  add(new THREE.LatheGeometry(prof, 72), M.concrete, 'condenser').position.set(TX, 0, TZ);
+  for (let k = 0; k < 18; k++){ const a = k * Math.PI * 2 / 18; bar([TX + 3.55 * Math.cos(a), 0.3, TZ + 3.55 * Math.sin(a)], [TX + 3.4 * Math.cos(a), 1.0, TZ + 3.4 * Math.sin(a)], 0.08, M.concrete, 'condenser'); }
+  add(new THREE.CylinderGeometry(3.85, 3.85, 0.35, 64), M.slab, 'condenser').position.set(TX, 0.175, TZ);
+  const bw = add(new THREE.CircleGeometry(3.65, 48), M.basin, 'condenser'); bw.rotation.x = -Math.PI / 2; bw.position.set(TX, 0.36, TZ);
+  const lip = add(new THREE.TorusGeometry(2.6, 0.06, 6, 72), M.concrete, 'condenser'); lip.rotation.x = Math.PI / 2; lip.position.set(TX, 10.2, TZ);
+  tube([[10.3, 1.4, -1.0], [12.4, 1.4, -2.4], [14.8, 1.6, -4.4], [15.6, 2.0, -5.2]], 0.16, M.gCool, 'condenser', false, 48);
+  tube([[15.3, 0.35, -5.0], [14.6, 0.35, -4.0], [12.2, 0.4, -2.2], [10.9, 0.5, -1.2], [10.3, 0.55, -1.0]], 0.16, M.gCool, 'condenser', false, 48);
+
+  /* 安全壳 */
+  R.shell = new THREE.Group(); scene.add(R.shell);
+  R.shellMat = new THREE.MeshStandardMaterial({ color:0xafc0b4, transparent:true, opacity:0.1, depthWrite:false, side:DS, roughness:1, metalness:0 });
+  add(new THREE.CylinderGeometry(5.3, 5.3, 8.7, 72, 1, true), R.shellMat, 'containment', R.shell).position.set(-6.3, 4.65, 0);
+  add(new THREE.SphereGeometry(5.3, 72, 20, 0, Math.PI * 2, 0, Math.PI / 2), R.shellMat, 'containment', R.shell).position.set(-6.3, 9.0, 0);
+  const lp = [];
+  for (let k = 0; k < 24; k++){
+    const a = k * Math.PI * 2 / 24, cx = -6.3 + 5.3 * Math.sin(a), cz = 5.3 * Math.cos(a);
+    lp.push(cx, 0.3, cz, cx, 9.0, cz);
+    for (let s = 0; s < 8; s++){
+      const p0 = s / 8 * Math.PI / 2, p1 = (s + 1) / 8 * Math.PI / 2;
+      lp.push(-6.3 + 5.3 * Math.cos(p0) * Math.sin(a), 9 + 5.3 * Math.sin(p0), 5.3 * Math.cos(p0) * Math.cos(a));
+      lp.push(-6.3 + 5.3 * Math.cos(p1) * Math.sin(a), 9 + 5.3 * Math.sin(p1), 5.3 * Math.cos(p1) * Math.cos(a));
+    }
+  }
+  [0.3, 9.0].forEach((y) => { for (let k = 0; k < 72; k++){ const a0 = k * Math.PI * 2 / 72, a1 = (k + 1) * Math.PI * 2 / 72; lp.push(-6.3 + 5.3 * Math.sin(a0), y, 5.3 * Math.cos(a0), -6.3 + 5.3 * Math.sin(a1), y, 5.3 * Math.cos(a1)); } });
+  const lg = new THREE.BufferGeometry(); lg.setAttribute('position', new THREE.Float32BufferAttribute(lp, 3));
+  R.shellLines = new THREE.LineSegments(lg, new THREE.LineBasicMaterial({ color:0x9fb0a4, transparent:true, opacity:0.45 }));
+  R.shell.add(R.shellLines);
+
+  /* 流动粒子 */
+  R.SPH = new THREE.SphereGeometry(1, 10, 8);
+  R.flows = {};
+  const P = makeFlow([
+    [-7.5, 6.0, -0.45], [-7.61, 5.6, -0.45], [-7.61, 2.0, -0.45], [-8.0, 0.9, -0.1], [-8.6, 0.8, 0.5], [-8.5, 1.6, 0.97],
+    [-8.5, 2.2, 0.97], [-8.5, 4.6, 0.97], [-8.3, 5.4, 0.75], [-7.7, 6.0, 0.45], [-6.9, 6.0, 0.45], [-5.8, 5.85, 0.43],
+    [-5.0, 5.0, 0.36], [-4.45, 4.56, 0.3], [-4.55, 5.4, 0.3], [-4.55, 8.2, 0.3], [-4.4, 8.62, 0.3], [-4.0, 8.75, 0.3],
+    [-3.6, 8.62, 0.3], [-3.45, 8.2, 0.3], [-3.45, 5.4, 0.3], [-3.55, 4.56, 0.1], [-3.4, 3.6, -0.6], [-3.8, 2.9, -1.6],
+    [-5.0, 2.9, -2.2], [-5.8, 3.2, -2.1], [-6.2, 3.6, -2.0], [-6.5, 4.0, -1.75], [-6.75, 5.6, -0.9], [-6.9, 6.0, -0.45]
+  ], true, 170, 0.075);
+  P.a0 = P.near([-8.5, 2.2, 0.97]); P.a1 = P.near([-8.5, 4.6, 0.97]); P.b0 = P.near([-4.55, 5.4, 0.3]); P.b1 = P.near([-3.45, 5.4, 0.3]);
+  R.flows.P = P;
+  const Sf = makeFlow([
+    [-3.3, 8.1, 0.7], [-3.4, 7.2, 0.62], [-3.4, 6.0, 0.55], [-3.7, 5.6, 0.5], [-4.0, 6.4, 0.55], [-4.0, 8.6, 0.5], [-4.0, 9.8, 0.3],
+    [-4.0, 11.3, 0], [-4.0, 12.15, 0], [-4.0, 12.7, 0], [-3.0, 12.95, 0], [0.6, 12.95, 0], [1.8, 12.3, 0], [1.9, 5.6, 0],
+    [2.7, 4.7, 0], [3.6, 4.05, 0], [3.7, 3.5, 0.35], [4.9, 3.3, 0.5], [5.0, 3.95, 0.45], [5.3, 4.85, 0.45], [7.4, 4.95, 0.45],
+    [7.9, 4.45, 0.45], [8.2, 3.3, 0.8], [9.4, 2.6, 0.7], [9.6, 1.7, 0.6], [8.0, 1.0, 0.8], [6.0, 0.6, 1.2], [5.8, 0.6, 1.45],
+    [4.0, 0.6, 2.5], [2.4, 0.6, 2.7], [0.5, 0.7, 2.7], [-1.5, 1.2, 2.3], [-2.4, 4.0, 1.6], [-2.9, 7.8, 1.0]
+  ], true, 200, 0.07);
+  Sf.c0 = Sf.near([-4.0, 6.4, 0.55]); Sf.c1 = Sf.near([-4.0, 8.6, 0.5]); Sf.d0 = Sf.near([9.6, 1.7, 0.6]); Sf.d1 = Sf.near([6.0, 0.6, 1.2]);
+  R.flows.S = Sf;
+  const Cf = makeFlow([
+    [10.3, 0.55, -1.0], [8.0, 0.6, -0.6], [5.8, 0.7, -0.3], [5.7, 1.2, 0], [8.0, 1.3, -0.3], [10.3, 1.4, -1.0], [12.4, 1.4, -2.4],
+    [14.8, 1.6, -4.4], [16.2, 2.6, -6.0], [16.8, 1.2, -6.8], [16.4, 0.4, -6.2], [15.3, 0.35, -5.0], [14.6, 0.35, -4.0],
+    [12.2, 0.4, -2.2], [10.9, 0.5, -1.2]
+  ], true, 120, 0.07);
+  Cf.e0 = Cf.near([10.3, 0.55, -1.0]); Cf.e1 = Cf.near([10.3, 1.4, -1.0]); Cf.f0 = Cf.near([16.2, 2.6, -6.0]); Cf.f1 = Cf.near([16.4, 0.4, -6.2]);
+  R.flows.C = Cf;
+  R.flows.E = makeFlow(wirePts, false, 36, 0.06);
+
+  /* 冷却塔水汽 */
+  const pcv = document.createElement('canvas'); pcv.width = pcv.height = 64;
+  const pg = pcv.getContext('2d'), grd = pg.createRadialGradient(32, 32, 0, 32, 32, 32);
+  grd.addColorStop(0, 'rgba(255,255,255,1)'); grd.addColorStop(0.5, 'rgba(255,255,255,.55)'); grd.addColorStop(1, 'rgba(255,255,255,0)');
+  pg.fillStyle = grd; pg.fillRect(0, 0, 64, 64);
+  const ptex = new THREE.CanvasTexture(pcv);
+  R.plume = []; R.plumeT = 0; R.TX = TX; R.TZ = TZ;
+  for (let k = 0; k < 70; k++){
+    const sp = new THREE.Sprite(new THREE.SpriteMaterial({ map:ptex, transparent:true, depthWrite:false, opacity:0 }));
+    sp.visible = false; scene.add(sp);
+    R.plume.push({ sp, alive:false, life:0, max:1, vx:0, vy:0, vz:0 });
+  }
+
+  /* 标签 */
+  const lab = $('labels');
+  LABELS.forEach(([name, key, pos]) => {
+    const b = document.createElement('button'); b.type = 'button'; b.className = 'lbl'; b.textContent = name;
+    b.addEventListener('click', () => showInfo(key));
+    lab.appendChild(b);
+    LBL.push({ el:b, key, pos:new V(pos[0], pos[1], pos[2]), shell:key === 'containment' });
+  });
+
+  applyTheme3D();
+  bindControls(canvas);
+}
+
+function makeFlow(pts, closed, count, size){
+  const curve = new THREE.CatmullRomCurve3(pts.map((p) => new V(p[0], p[1], p[2])), closed, 'centripetal');
+  const N = 900, lut = curve.getSpacedPoints(N);
+  const mesh = new THREE.InstancedMesh(R.SPH, new THREE.MeshBasicMaterial({ color:0xffffff }), count);
+  mesh.frustumCulled = false;
+  const u = new Float32Array(count), c = new THREE.Color(0xffffff);
+  for (let i = 0; i < count; i++){ u[i] = (i + Math.random() * 0.6) / count; mesh.setColorAt(i, c); }
+  scene.add(mesh);
+  return { lut, N, mesh, u, count, size, len:curve.getLength(),
+    near(p){ let best = 0, bd = 1e9; for (let i = 0; i <= N; i++){ const q = lut[i]; const d = (q.x - p[0]) ** 2 + (q.y - p[1]) ** 2 + (q.z - p[2]) ** 2; if (d < bd){ bd = d; best = i; } } return best / N; } };
+}
+const _m4 = typeof THREE !== 'undefined' ? new THREE.Matrix4() : null;
+const _c = typeof THREE !== 'undefined' ? new THREE.Color() : null;
+function updateFlow(f, dt, speed, colorFn, sizeFn){
+  const du = speed * dt / f.len;
+  for (let i = 0; i < f.count; i++){
+    let u = f.u[i] + du; u -= Math.floor(u); f.u[i] = u;
+    const x = u * f.N, k = Math.min(f.N - 1, Math.floor(x)), t = x - k, a = f.lut[k], b = f.lut[k + 1];
+    const s = sizeFn ? sizeFn(u) : f.size;
+    _m4.makeScale(s, s, s); _m4.setPosition(a.x + (b.x - a.x) * t, a.y + (b.y - a.y) * t, a.z + (b.z - a.z) * t);
+    f.mesh.setMatrixAt(i, _m4);
+    colorFn(u, _c); f.mesh.setColorAt(i, _c);
+  }
+  f.mesh.instanceMatrix.needsUpdate = true;
+  f.mesh.instanceColor.needsUpdate = true;
+}
+const segT = (u, a, b) => (u - a) / (b - a);
+
+let FC = null;
+function update3D(dt){
+  if (!FC) FC = { cold:new THREE.Color(0x3f8fe0), hot:new THREE.Color(0xe4572e), water:new THREE.Color(0x58a9ec), steam:new THREE.Color(0xf2f5f6),
+    cw:new THREE.Color(0x2b9a9a), cwWarm:new THREE.Color(0x9fd8a8), elec:new THREE.Color(0xf5c542) };
+  R.rods.position.y = -S.rod * 2.4;
+  const pw = clamp(S.Pth, 0, 1.3);
+  R.glow.material.opacity = pw * 0.36;
+  R.coreLight.intensity = pw * 1.7;
+  R.M.fuel.emissiveIntensity = 0.08 + pw * 0.6;
+  R.fly.rotation.y += dt * S.flow * 7;
+  R.rotor.rotation.x += dt * S.turb * 10;
+
+  const P = R.flows.P, hf = clamp((S.Th - PHY.Tc) / PHY.dT, 0, 1.4);
+  updateFlow(P, dt, 2.6 * S.flow, (u, c) => {
+    let t = 0;
+    if (u >= P.a0 && u < P.a1) t = segT(u, P.a0, P.a1);
+    else if (u >= P.a1 && u < P.b0) t = 1;
+    else if (u >= P.b0 && u < P.b1) t = 1 - segT(u, P.b0, P.b1);
+    c.copy(FC.cold).lerp(FC.hot, clamp(t * hf, 0, 1));
+  });
+  const Sf = R.flows.S, boil = clamp(S.Pth * 4, 0, 1);
+  const phase = (u) => {
+    if (u >= Sf.c0 && u < Sf.c1) return segT(u, Sf.c0, Sf.c1) * boil;
+    if (u >= Sf.c1 && u < Sf.d0) return boil;
+    if (u >= Sf.d0 && u < Sf.d1) return (1 - segT(u, Sf.d0, Sf.d1)) * boil;
+    return 0;
+  };
+  updateFlow(Sf, dt, 0.25 + 2.4 * clamp(S.Pth, 0, 1.2), (u, c) => c.copy(FC.water).lerp(FC.steam, phase(u)), (u) => 0.068 + phase(u) * 0.035);
+  const Cf = R.flows.C;
+  updateFlow(Cf, dt, 1.8, (u, c) => {
+    let t = 0;
+    if (u >= Cf.e0 && u < Cf.e1) t = segT(u, Cf.e0, Cf.e1);
+    else if (u >= Cf.e1 && u < Cf.f0) t = 1;
+    else if (u >= Cf.f0 && u < Cf.f1) t = 1 - segT(u, Cf.f0, Cf.f1);
+    c.copy(FC.cw).lerp(FC.cwWarm, clamp(t * pw, 0, 1));
+  });
+  R.flows.E.mesh.visible = S.MWe > 1;
+  if (S.MWe > 1) updateFlow(R.flows.E, dt, 5 * clamp(S.MWe / 1000, 0.2, 1.2), (u, c) => c.copy(FC.elec));
+
+  R.plumeT += dt * (S.Pth > 0.02 ? 7 * Math.min(S.Pth, 1.2) : 0);
+  while (R.plumeT >= 1){
+    R.plumeT -= 1;
+    const p = R.plume.find((q) => !q.alive);
+    if (p){
+      p.alive = true; p.life = 0; p.max = 5 + Math.random() * 2.5;
+      p.sp.position.set(R.TX + (Math.random() - 0.5) * 2.6, 10.2, R.TZ + (Math.random() - 0.5) * 2.6);
+      p.vx = 0.35 + Math.random() * 0.25; p.vy = 0.9 + Math.random() * 0.4; p.vz = (Math.random() - 0.5) * 0.2;
+      p.sp.visible = true;
+    }
+  }
+  R.plume.forEach((p) => {
+    if (!p.alive) return;
+    p.life += dt;
+    if (p.life > p.max){ p.alive = false; p.sp.visible = false; return; }
+    p.sp.position.x += p.vx * dt; p.sp.position.y += p.vy * dt; p.sp.position.z += p.vz * dt;
+    const s = 1.8 + p.life * 0.95; p.sp.scale.set(s, s, 1);
+    p.sp.material.opacity = 0.55 * Math.sin(Math.PI * p.life / p.max);
+  });
+}
+
+function applyTheme3D(){
+  if (!scene) return;
+  const bg = new THREE.Color(tok('--vp-bg'));
+  scene.background = bg; scene.fog.color.copy(bg);
+  R.ground.material.color.set(tok('--vp-ground'));
+  const gc = tok('--vp-grid');
+  if (R.grid) scene.remove(R.grid);
+  R.grid = new THREE.GridHelper(120, 60, gc, gc);
+  R.grid.position.y = 0.01; R.grid.material.transparent = true; R.grid.material.opacity = 0.7;
+  scene.add(R.grid);
+  R.shellMat.color.set(tok('--shell'));
+  R.shellLines.material.color.set(tok('--shell'));
+  const pc = tok('--plume');
+  R.plume.forEach((p) => p.sp.material.color.set(pc));
+  const dark = bg.getHSL({}).l < 0.3;
+  R.hemi.intensity = dark ? 0.7 : 0.85;
+}
+
+/* ---------- 视角 ---------- */
+function aspectFactor(){ return clamp(1.5 / (vpW / vpH), 1, 2.3); }
+function wrapA(a){ while (a > Math.PI) a -= Math.PI * 2; while (a < -Math.PI) a += Math.PI * 2; return a; }
+function flyTo(v){
+  goal.tx = v.t[0]; goal.ty = v.t[1]; goal.tz = v.t[2];
+  goal.r = v.r * aspectFactor(); goal.th = cam.th + wrapA(v.th - cam.th); goal.ph = v.ph;
+  goal.active = true;
+  if (RM.matches){ ['tx','ty','tz','r','th','ph'].forEach((k) => { cam[k] = goal[k]; }); goal.active = false; }
+}
+function camStep(dt){
+  if (!goal.active) return;
+  const k = 1 - Math.exp(-dt * 3.2);
+  let d = 0;
+  ['tx','ty','tz','r','th','ph'].forEach((key) => { cam[key] = lerp(cam[key], goal[key], k); d += Math.abs(cam[key] - goal[key]); });
+  if (d < 0.002) goal.active = false;
+}
+function applyCam(){
+  const sp = Math.sin(cam.ph);
+  camera.position.set(cam.tx + cam.r * sp * Math.sin(cam.th), cam.ty + cam.r * Math.cos(cam.ph), cam.tz + cam.r * sp * Math.cos(cam.th));
+  camera.lookAt(cam.tx, cam.ty, cam.tz);
+  const wide = window.matchMedia('(min-width: 981px)').matches;
+  const want = (wide && !info.hidden) ? Math.min(190, vpW * 0.17) : 0;
+  const ns = RM.matches ? want : lerp(viewShift, want, 0.12);
+  if (Math.abs(ns - viewShift) > 0.05 || (ns === 0 && viewShift !== 0)){
+    viewShift = Math.abs(ns - want) < 0.3 ? want : ns;
+    if (viewShift > 0.01) camera.setViewOffset(vpW, vpH, -viewShift, 0, vpW, vpH); else camera.clearViewOffset();
+    camera.updateProjectionMatrix();
+  }
+}
+function bindControls(canvas){
+  const ptrs = new Map(); let drag = null, pinch = null;
+  const right = new V(), up = new V();
+  const rotate = (dx, dy) => { cam.th -= dx * 0.006; cam.ph = clamp(cam.ph - dy * 0.005, 0.12, 1.52); };
+  const pan = (dx, dy) => {
+    const s = cam.r * 0.0017;
+    right.setFromMatrixColumn(camera.matrix, 0); up.setFromMatrixColumn(camera.matrix, 1);
+    cam.tx += -dx * s * right.x + dy * s * up.x; cam.ty += -dx * s * right.y + dy * s * up.y; cam.tz += -dx * s * right.z + dy * s * up.z;
+    cam.ty = clamp(cam.ty, -2, 20);
+  };
+  const pinchInfo = () => { const a = [...ptrs.values()]; return { d:Math.hypot(a[0].x - a[1].x, a[0].y - a[1].y), x:(a[0].x + a[1].x) / 2, y:(a[0].y + a[1].y) / 2 }; };
+  canvas.addEventListener('pointerdown', (e) => {
+    canvas.setPointerCapture(e.pointerId);
+    ptrs.set(e.pointerId, { x:e.clientX, y:e.clientY });
+    goal.active = false; canvas.classList.add('grabbing');
+    if (ptrs.size === 1) drag = { moved:0, btn:e.button, pan:e.button === 2 || e.shiftKey };
+    else { if (drag) drag.moved = 99; pinch = pinchInfo(); }
+  });
+  canvas.addEventListener('pointermove', (e) => {
+    const p = ptrs.get(e.pointerId); if (!p) return;
+    const dx = e.clientX - p.x, dy = e.clientY - p.y;
+    p.x = e.clientX; p.y = e.clientY;
+    if (ptrs.size === 1 && drag){
+      drag.moved += Math.abs(dx) + Math.abs(dy);
+      if (drag.pan) pan(dx, dy); else rotate(dx, dy);
+    } else if (ptrs.size === 2 && pinch){
+      const q = pinchInfo();
+      if (q.d > 0 && pinch.d > 0) cam.r = clamp(cam.r * pinch.d / q.d, 4, 80);
+      pan(q.x - pinch.x, q.y - pinch.y);
+      pinch = q;
+    }
+  });
+  const end = (e) => {
+    if (!ptrs.has(e.pointerId)) return;
+    if (ptrs.size === 1 && drag && drag.moved < 6 && drag.btn === 0 && e.type === 'pointerup') pick(e);
+    ptrs.delete(e.pointerId);
+    if (ptrs.size < 2) pinch = null;
+    if (ptrs.size === 0){ drag = null; canvas.classList.remove('grabbing'); }
+  };
+  canvas.addEventListener('pointerup', end);
+  canvas.addEventListener('pointercancel', end);
+  canvas.addEventListener('contextmenu', (e) => e.preventDefault());
+  canvas.addEventListener('wheel', (e) => { e.preventDefault(); goal.active = false; cam.r = clamp(cam.r * Math.exp(e.deltaY * 0.0012), 4, 80); }, { passive:false });
+}
+function pick(e){
+  const rect = $('scene').getBoundingClientRect();
+  const ndc = { x:((e.clientX - rect.left) / rect.width) * 2 - 1, y:-((e.clientY - rect.top) / rect.height) * 2 + 1 };
+  raycaster.setFromCamera(ndc, camera);
+  const hits = raycaster.intersectObjects(pickables, false);
+  let key = null, shellHit = false;
+  for (const h of hits){
+    const part = h.object.userData.part;
+    if (part === 'containment'){ if (R.shell.visible) shellHit = true; continue; }
+    key = part; break;
+  }
+  if (!key && shellHit) key = 'containment';
+  if (key) showInfo(key);
+}
+const _v = { x:0, y:0, z:0 };
+let showLabels = true;
+function placeLabels(){
+  for (const L of LBL){
+    const v = L.pos.clone().project(camera);
+    if (!showLabels || (L.shell && !R.shell.visible) || v.z > 1 || v.x < -1.02 || v.x > 1.02 || v.y < -1.02 || v.y > 1.02){
+      if (L.vis !== false){ L.el.style.visibility = 'hidden'; L.vis = false; }
+      continue;
+    }
+    if (L.vis !== true){ L.el.style.visibility = 'visible'; L.vis = true; }
+    const x = (v.x * 0.5 + 0.5) * vpW, y = (-v.y * 0.5 + 0.5) * vpH - 6;
+    L.el.style.transform = 'translate(' + x.toFixed(1) + 'px,' + y.toFixed(1) + 'px) translate(-50%,-100%)';
+  }
+}
+
+/* ============================ 启动 ============================ */
+try { if (typeof THREE !== 'undefined'){ build3D(); gl = true; } } catch (err){ console.error(err); gl = false; }
+if (!gl){ $('nogl').hidden = false; $('bLabels').disabled = true; $('bShell').disabled = true; $('bView').disabled = true; $('hint').hidden = true; }
+
+$('bView').addEventListener('click', () => { if (gl) flyTo(VIEWS.intro); });
+$('bLabels').addEventListener('click', (e) => { showLabels = !showLabels; e.currentTarget.setAttribute('aria-pressed', String(showLabels)); });
+$('bShell').addEventListener('click', (e) => { if (!gl) return; R.shell.visible = !R.shell.visible; e.currentTarget.setAttribute('aria-pressed', String(R.shell.visible)); });
+
+function onResize(){
+  if (gl){
+    const r = $('vp').getBoundingClientRect();
+    vpW = Math.max(1, r.width); vpH = Math.max(1, r.height);
+    renderer.setSize(vpW, vpH, false);
+    camera.aspect = vpW / vpH;
+    viewShift = -1;
+    camera.updateProjectionMatrix();
+  }
+  ncLayout(); sizeCanvas(TC); trend.dirty = true;
+}
+const ro = new ResizeObserver(onResize);
+ro.observe($('vp')); ro.observe(NC.cv); ro.observe(TC.cv);
+onResize();
+
+function onTheme(){ readColors(); applyTheme3D(); trend.dirty = true; }
+window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', onTheme);
+new MutationObserver(onTheme).observe(document.documentElement, { attributes:true, attributeFilter:['data-theme'] });
+if (document.fonts && document.fonts.ready) document.fonts.ready.then(() => { trend.dirty = true; });
+
+if (gl){
+  const f = aspectFactor(); cam.r = VIEWS.intro.r * f; goal.r = cam.r;
+}
+showInfo('intro', false);
+for (let i = 0; i < 200; i++) ncStep(1 / 60);
+updateUI();
+
+let last = performance.now(), uiT = 0;
+function frame(now){
+  const dt = Math.min(0.05, Math.max(0, (now - last) / 1000)); last = now;
+  let rem = dt; while (rem > 1e-6){ const h = Math.min(rem, 1 / 120); step(h); rem -= h; }
+  sampleTrend(dt);
+  ncStep(dt); ncDraw();
+  if (gl){ update3D(dt); camStep(dt); applyCam(); renderer.render(scene, camera); placeLabels(); }
+  uiT += dt; if (uiT > 0.1){ uiT = 0; updateUI(); }
+  if (trend.dirty){ trend.dirty = false; drawChart(); }
+  requestAnimationFrame(frame);
+}
+requestAnimationFrame(frame);
+})();
+</script>
+</body>
+</html>
